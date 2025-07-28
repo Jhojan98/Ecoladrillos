@@ -12,6 +12,7 @@ ENV PYTHONUNBUFFERED=1
 RUN apt-get update && apt-get install -y \
     gcc \
     default-libmysqlclient-dev \
+    pkg-config \
     dos2unix \
     netcat-openbsd \
     && apt-get clean \

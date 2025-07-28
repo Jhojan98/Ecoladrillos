@@ -1,20 +1,27 @@
 #!/bin/bash
 
+echo "Starting Django application..."
+
 if [ "$DATABASE" = "mysql" ]
 then
-    echo "Waiting for mysql..."
+    echo "Waiting for MySQL database..."
+    echo "Checking connection to $SQL_HOST:$SQL_PORT"
+    
+    # Wait for MySQL to be ready
     while ! nc -z $SQL_HOST $SQL_PORT; do
-      sleep 0.1
+      echo "MySQL is unavailable - sleeping"
+      sleep 1
     done
-    echo "MySQL started"
+    
+    echo "MySQL is up - executing command"
 fi
 
-# Décommenter pour supprimer la bdd à chaque redémarrage (danger)
-# echo "Clear entire database"
-# python manage.py flush --no-input
+# Wait a bit more to ensure MySQL is fully ready
+sleep 5
 
-echo "Appling database migrations..."
+echo "Applying database migrations..."
 python manage.py makemigrations 
 python manage.py migrate
 
+echo "Starting Django server..."
 exec "$@"
