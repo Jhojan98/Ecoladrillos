@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 class Usuario(models.Model):
-    id_usuario = models.IntegerField(primary_key=True)
+    id_usuario = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
     email = models.EmailField(max_length=100, unique=True)
     contraseña = models.CharField(max_length=100)
@@ -24,16 +24,17 @@ class Administrador(Usuario):
     
 
 class Ecoladrillo(models.Model):
+    id_ecoladrillo = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField()
-    id_ecoladrillo = models.AutoField(primary_key=True)
     cantidad = models.IntegerField(default=0)
 
     def __str__(self):
         return self.nombre
+   
 
 class Material(models.Model):
-    id_insumo = models.IntegerField(primary_key=True)
+    id_insumo = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
     tipo = models.CharField(max_length=50)
     cantidad_disponible = models.IntegerField(default=0)
@@ -43,7 +44,7 @@ class Material(models.Model):
         return self.nombre
 
 class RegistroEcoladrillo(models.Model):
-    id_registro = models.IntegerField(primary_key=True)
+    id_registro = models.AutoField(primary_key=True)
     fecha = models.DateField()
     cantidad = models.IntegerField(default=0)
     material_usado = models.ForeignKey(Material, on_delete=models.CASCADE)
@@ -52,7 +53,7 @@ class RegistroEcoladrillo(models.Model):
         return f"Registro {self.id_registro} - Fecha: {self.fecha} - Cantidad: {self.cantidad}"
 
 class RetiroEcoladrillo(models.Model):
-    id_retiro = models.IntegerField(primary_key=True)
+    id_retiro = models.AutoField(primary_key=True)
     fecha = models.DateField()
     cantidad = models.IntegerField(default=0)
     motivo = models.CharField(max_length=200)
@@ -61,7 +62,7 @@ class RetiroEcoladrillo(models.Model):
       return self.motivo
     
 class RegistroMaterial(models.Model):
-    id_registro_material = models.IntegerField(primary_key=True)
+    id_registro_material = models.AutoField(primary_key=True)
     id_ingreso = models.IntegerField()
     fecha = models.DateField()
     cantidad = models.IntegerField(default=0)
@@ -72,7 +73,7 @@ class RegistroMaterial(models.Model):
         return self.id_ingreso
 
 class Reporte(models.Model):
-    id_reporte = models.IntegerField(primary_key=True)
+    id_reporte = models.AutoField(primary_key=True)
     fecha_generacion = models.DateField()
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()

@@ -63,6 +63,7 @@ class RegistroEcoladrilloViewSet(viewsets.ModelViewSet):
     queryset = RegistroEcoladrillo.objects.all().select_related('material_usado')
     serializer_class = RegistroEcoladrilloSerializer
     permission_classes = [AllowAny]
+
     
     @action(detail=False, methods=['get'])
     def por_fecha(self, request):
@@ -84,10 +85,28 @@ class RetiroEcoladrilloViewSet(viewsets.ModelViewSet):
     serializer_class = RetiroEcoladrilloSerializer
     permission_classes = [AllowAny]
 
+    
+
 class RegistroMaterialViewSet(viewsets.ModelViewSet):
     queryset = RegistroMaterial.objects.all().select_related('material')
     serializer_class = RegistroMaterialSerializer
     permission_classes = [AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        """Crear registro y actualizar cantidad del material automáticamente"""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        # Guardar el registro
+        registro = serializer.save()
+        
+        # Actualizar cantidad del material
+        material = registro.material
+        material.cantidad_disponible += registro.cantidad      
+        material.save()
+        
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class ReporteViewSet(viewsets.ModelViewSet):
     queryset = Reporte.objects.all()
