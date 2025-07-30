@@ -9,6 +9,9 @@ import { Login } from "@components/auth/Login";
 import { AuthPage } from "@components/auth/AuthPage";
 // import { Home } from "@components/layout/Home";UserProfile";
 import Dashboard from "@components/Dashboard/Dashboard";
+import ConsultaInventario from "@components/ConsultaInventario/ConsultaInventario";
+import RegistroEcoladrillos from "@components/RegistroEcoladrillos/RegistroEcoladrillos";
+import RegistroSalidaEcoladrillos from "@components/RegistroEcoladrillos/RegistroSalidaEcoladrillos";
 // styles
 import "@styles/main.scss";
 
@@ -26,6 +29,9 @@ export function AppRouter() {
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<AuthPage AuthElement={Login} />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/consulta" element={<ConsultaInventario />} />
+        <Route path="/registro" element={<RegistroEcoladrillos />} />
+        <Route path="/salida" element={<RegistroSalidaEcoladrillos />} />
         {/* <Route path="/signin" element={<AuthPage AuthElement={Signin} />} />
         <Route path="/home" element={<Home />} /> */}
         <Route

@@ -1,0 +1,86 @@
+.inventario-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  margin-bottom: 2rem;
+}
+.inventario-table th, .inventario-table td {
+  border: 1px solid #eee;
+  padding: 0.5rem;
+  text-align: left;
+}
+.consulta-inventario-container {
+  display: flex;
+  gap: 2rem;
+  background: #f7f7f7;
+  min-height: 100vh;
+}
+.menu-lateral {
+  min-width: 180px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 2rem 1rem;
+}
+.menu-lateral ul {
+  list-style: none;
+  padding: 0;
+}
+.menu-lateral li {
+  margin-bottom: 1rem;
+}
+.menu-lateral a {
+  text-decoration: none;
+  color: #2196F3;
+  font-weight: 500;
+}
+main {
+  flex: 1;
+}
+.tarjetas-resumen {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+.tarjeta {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 1rem 2rem;
+  min-width: 180px;
+  text-align: center;
+  position: relative;
+}
+.tarjeta.alerta {
+  border: 2px solid #d32f2f;
+}
+.graficos {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+.alerta-stock {
+  color: #d32f2f;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+.filtros {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.movimientos-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  margin-top: 1rem;
+}
+.movimientos-table th, .movimientos-table td {
+  border: 1px solid #eee;
+  padding: 0.5rem;
+  text-align: left;
+}
