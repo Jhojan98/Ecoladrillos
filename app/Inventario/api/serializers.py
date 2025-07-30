@@ -28,14 +28,14 @@ class EcoladrilloSerializer(serializers.ModelSerializer):
 class MaterialSerializer(serializers.ModelSerializer):
     class Meta:
         model = Material
-        fields = ['id_insumo', 'nombre', 'tipo', 'cantidad_disponible', 'unidad_medida']
+        fields = ['id_insumo', 'nombre', 'tipo', 'cantidad_disponible', 'unidad_medida', 'cantidad_para_ecoladrillo']
 
 class RegistroEcoladrilloSerializer(serializers.ModelSerializer):
     material_usado_nombre = serializers.CharField(source='material_usado.nombre', read_only=True)
     
     class Meta:
         model = RegistroEcoladrillo
-        fields = ['id_registro', 'fecha', 'cantidad', 'material_usado', 'material_usado_nombre']
+        fields = ['id_registro', 'fecha', 'ecoladrillo', 'cantidad', 'material_usado', 'material_usado_nombre']
 
 class RetiroEcoladrilloSerializer(serializers.ModelSerializer):
     class Meta:

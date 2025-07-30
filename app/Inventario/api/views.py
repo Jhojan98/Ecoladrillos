@@ -63,7 +63,19 @@ class RegistroEcoladrilloViewSet(viewsets.ModelViewSet):
     queryset = RegistroEcoladrillo.objects.all().select_related('material_usado')
     serializer_class = RegistroEcoladrilloSerializer
     permission_classes = [AllowAny]
-
+    
+    def create(self, request, *args, **kwargs):
+        """Crear registro de ecoladrillo y manejar errores de stock"""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        try:
+            # Intentar guardar el registro (aquí se ejecuta el método save() del modelo)
+            registro = serializer.save()
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        except ValueError as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
     @action(detail=False, methods=['get'])
     def por_fecha(self, request):
@@ -102,9 +114,11 @@ class RegistroMaterialViewSet(viewsets.ModelViewSet):
         
         # Actualizar cantidad del material
         material = registro.material
-        material.cantidad_disponible += registro.cantidad      
-        material.save()
-        
+        try:
+            material.agregar_stock(registro.cantidad)
+        except ValueError as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
