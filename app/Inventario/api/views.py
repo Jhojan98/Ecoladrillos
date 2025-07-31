@@ -127,7 +127,7 @@ class MaterialViewSet(BaseViewSet):
         return Response(serializer.data)
 
 class RegistroEcoladrilloViewSet(BaseViewSet):
-    queryset = RegistroEcoladrillo.objects.all().select_related('material_usado')
+    queryset = RegistroEcoladrillo.objects.all().select_related('ecoladrillo', 'ecoladrillo__material_principal')
     serializer_class = RegistroEcoladrilloSerializer
     permission_classes = [AllowAny]
     
