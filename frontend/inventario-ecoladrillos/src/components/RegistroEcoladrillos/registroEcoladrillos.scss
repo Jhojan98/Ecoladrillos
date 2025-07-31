@@ -1,36 +1,172 @@
 .registro-ecoladrillos-container {
   padding: 2rem;
-  background: #f7f7f7;
+  min-height: 100vh;
+  background: #e0f2e9; // verde pastel muy suave
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  h2 {
+    color: #48bb78;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+  }
 }
+
+/* Estilo neumórfico para el formulario */
 .registro-form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-  padding: 1rem 2rem;
-  margin-bottom: 2rem;
-}
-.registro-form label {
-  display: flex;
-  flex-direction: column;
-  font-weight: 500;
-}
-.error-msg {
-  color: #d32f2f;
-  font-weight: bold;
-}
-.registros-table {
+  gap: 1.5rem;
+  background: #e0f2e9;
+  border-radius: 20px;
+  padding: 2rem;
   width: 100%;
-  border-collapse: collapse;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-  margin-top: 1rem;
+  max-width: 600px;
+  box-shadow: 8px 8px 16px #b6d1c3, -8px -8px 16px #ffffff;
+  animation: fadeIn 0.6s ease;
+
+  label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #2d3748;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    input, select, textarea {
+      background: #e0f2e9;
+      border: none;
+      padding: 0.9rem 1.2rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      box-shadow: inset 4px 4px 8px #b6d1c3, inset -4px -4px 8px #ffffff;
+      transition: all 0.3s ease;
+
+      &:focus {
+        box-shadow: inset 2px 2px 6px #b6d1c3, inset -2px -2px 6px #ffffff;
+        outline: none;
+      }
+    }
+  }
+
+  .btn-submit {
+    background: #e0f2e9;
+    color: #48bb78;
+    font-weight: 700;
+    padding: 0.9rem 1.5rem;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border: none;
+    box-shadow: 6px 6px 12px #b6d1c3, -6px -6px 12px #ffffff;
+    transition: all 0.2s ease;
+
+    &:active {
+      box-shadow: inset 4px 4px 8px #b6d1c3, inset -4px -4px 8px #ffffff;
+      color: #2f855a;
+    }
+
+    &:hover {
+      color: #2f855a;
+      transform: translateY(-1px);
+    }
+  }
 }
-.registros-table th, .registros-table td {
-  border: 1px solid #eee;
-  padding: 0.5rem;
-  text-align: left;
+
+/* Tabla con estilo neumórfico */
+.registros-table {
+  margin-top: 2rem;
+  width: 100%;
+  max-width: 700px;
+  border-radius: 20px;
+  background: #e0f2e9;
+  box-shadow: 8px 8px 16px #b6d1c3, -8px -8px 16px #ffffff;
+  overflow: hidden;
+
+  th, td {
+    padding: 1rem;
+    text-align: left;
+  }
+
+  th {
+    background: #e0f2e9;
+    color: #48bb78;
+    font-weight: 700;
+    font-size: 0.9rem;
+    box-shadow: inset 4px 4px 8px #b6d1c3, inset -4px -4px 8px #ffffff;
+  }
+
+  tr {
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: #d2eadc;
+    }
+  }
+
+  td {
+    color: #4a5568;
+  }
+}
+
+/* Mensaje de error neumórfico */
+.error-msg {
+  background: #e0f2e9;
+  color: #e53e3e;
+  font-weight: 600;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  box-shadow: inset 3px 3px 6px #b6d1c3, inset -3px -3px 6px #ffffff;
+
+  &::before {
+    content: "⚠️";
+  }
+}
+
+/* Indicador de progreso circular */
+.progreso-circular {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: conic-gradient(#48bb78 calc(var(--porcentaje) * 1%), #cbd5e0 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #2f855a;
+  box-shadow: 6px 6px 12px #b6d1c3, -6px -6px 12px #ffffff;
+
+  span {
+    font-size: 1rem;
+  }
+}
+
+/* Animaciones suaves */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .registro-ecoladrillos-container {
+    padding: 1rem;
+  }
+
+  .registros-table {
+    display: block;
+    overflow-x: auto;
+
+    th, td {
+      min-width: 120px;
+    }
+  }
 }

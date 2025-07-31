@@ -13,6 +13,8 @@ import Dashboard from "@components/Dashboard/Dashboard";
 import ConsultaInventario from "@components/ConsultaInventario/ConsultaInventario";
 import RegistroEcoladrillos from "@components/RegistroEcoladrillos/RegistroEcoladrillos";
 import RegistroSalidaEcoladrillos from "@components/RegistroEcoladrillos/RegistroSalidaEcoladrillos";
+import HomePage from "@components/home/HomePage";
+import RegistroMaterial from "@components/RegistroMaterial/RegistroMaterial";
 // styles
 import "@styles/main.scss";
 
@@ -27,17 +29,17 @@ export function AppRouter() {
         isAuthenticated={isAuthenticated}
       />
       <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={isAuthenticated ? <HomePage /> : <Navigate to="/login" replace />} />
         <Route path="/login" element={<AuthPage AuthElement={Login} />} />
       </Routes>
       <BasePage>
         <Routes>
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/registro-material" element={<RegistroMaterial />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/consulta" element={<ConsultaInventario />} />
-          <Route path="/registro" element={<RegistroEcoladrillos />} />
-          <Route path="/salida" element={<RegistroSalidaEcoladrillos />} />
-          {/* <Route path="/signin" element={<AuthPage AuthElement={Signin} />} />
-        <Route path="/home" element={<Home />} /> */}
+          <Route path="/consultar-inventario" element={<ConsultaInventario />} />
+          <Route path="/registrar-entrada" element={<RegistroEcoladrillos />} />
+          <Route path="/registrar-salida" element={<RegistroSalidaEcoladrillos />} />
           <Route
             path="*"
             element={

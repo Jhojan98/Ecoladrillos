@@ -1,0 +1,283 @@
+
+// Migración de variables: si no existen, define valores por defecto aquí
+$background: #f7f9fa !default;
+$text: #222 !default;
+
+// Si tienes variables en _variables.scss, usa:
+// @use '../../assets/styles/_variables.scss' as *;
+
+.home-page {
+  min-height: 100vh;
+  background: $background;
+  color: $text;
+  transition: background 0.3s, color 0.3s;
+  position: relative;
+  font-family: 'Montserrat', sans-serif;
+
+  &.dark {
+    background: #181c1f;
+    color: #f1f1f1;
+    .card, .search-bar, .fab-menu, .cta-btn { background: #23272b; color: #f1f1f1; }
+    .card { box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+    .search-bar input { background: #23272b; color: #f1f1f1; }
+  }
+}
+
+.dark-toggle {
+  position: absolute;
+  top: 24px;
+  right: 32px;
+  background: none;
+  border: none;
+  font-size: 1.7rem;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.hero-section {
+  position: relative;
+  height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .hero-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+    .video-bg {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  position: absolute;
+  top: 0; left: 0;
+  z-index: 0;
+}
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .cta-btn {
+      background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      border-radius: 30px;
+      padding: 0.9rem 2.2rem;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 12px rgba(67,233,123,0.15);
+      cursor: pointer;
+      transition: box-shadow 0.3s, transform 0.3s;
+      &:hover {
+        box-shadow: 0 8px 24px rgba(67,233,123,0.25);
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+.cards-section {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: -60px auto 2.5rem auto;
+  max-width: 1100px;
+  position: relative;
+  z-index: 3;
+  .card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.10);
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    min-width: 210px;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: box-shadow 0.3s, transform 0.3s;
+    .icon {
+      font-size: 2.2rem;
+      margin-bottom: 0.7rem;
+      &.qr {
+        position: relative;
+        .qr-anim {
+          animation: pulse 1.2s infinite;
+        }
+      }
+    }
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .mini-chart {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto;
+    }
+    .countup {
+      font-weight: 700;
+      color: #43e97b;
+      font-size: 1.1rem;
+      margin-left: 0.2rem;
+    }
+    // Estilos para el menú de escáner
+    &.escaner-card {
+      position: relative;
+      .escaner-menu {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(67,233,123,0.13);
+        padding: 0.7rem 1.2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        z-index: 10;
+        button {
+          background: none;
+          border: none;
+          color: #43e97b;
+          font-weight: 600;
+          font-size: 1rem;
+          cursor: pointer;
+          padding: 0.4rem 0;
+          text-align: left;
+          transition: color 0.2s;
+          &:hover {
+            color: #38f9d7;
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(67,233,123,0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(67,233,123,0); }
+  100% { box-shadow: 0 0 0 0 rgba(67,233,123,0); }
+}
+
+.search-bar {
+  margin: 2.5rem auto 0 auto;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 30px;
+  box-shadow: 0 2px 8px rgba(67,233,123,0.08);
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1.2rem;
+  position: relative;
+  .search-icon {
+    font-size: 1.3rem;
+    margin-right: 0.7rem;
+    color: #43e97b;
+  }
+  input {
+    border: none;
+    outline: none;
+    font-size: 1.1rem;
+    flex: 1;
+    background: transparent;
+    color: inherit;
+    padding: 0.5rem 0;
+    &:focus {
+      border-bottom: 2px solid #43e97b;
+    }
+  }
+  .suggestions {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 4px 12px rgba(67,233,123,0.10);
+    z-index: 5;
+    li {
+      padding: 0.7rem 1.2rem;
+      cursor: pointer;
+      &:hover {
+        background: #e8f9f1;
+      }
+    }
+  }
+}
+
+.fab {
+  position: fixed;
+  right: 32px;
+  bottom: 32px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  .fab-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+    color: #fff;
+    font-size: 2.2rem;
+    border: none;
+    box-shadow: 0 4px 16px rgba(67,233,123,0.18);
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+    &:hover {
+      background: linear-gradient(90deg, #38f9d7 0%, #43e97b 100%);
+      transform: rotate(90deg);
+    }
+  }
+  .fab-menu {
+    margin-bottom: 0.7rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(67,233,123,0.13);
+    padding: 0.7rem 1.2rem;
+    button {
+      background: none;
+      border: none;
+      color: #43e97b;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0.4rem 0;
+      text-align: left;
+      transition: color 0.2s;
+      &:hover {
+        color: #38f9d7;
+      }
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .cards-section {
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    .card { min-width: 160px; }
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-section { height: 220px; }
+  .cards-section { flex-direction: column; align-items: center; }
+  .search-bar { max-width: 98vw; }
+}
