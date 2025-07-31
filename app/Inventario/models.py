@@ -1,27 +1,7 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
-
-class Usuario(models.Model):
-    id_usuario = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=100)
-    email = models.EmailField(max_length=100, unique=True)
-    contraseña = models.CharField(max_length=100)
-
-    class Meta:
-        abstract = True
-
-
-class Operario(Usuario):
-    cargo = models.CharField(max_length=100)
-
-    def __str__(self):
-        return f"{self.nombre} - {self.cargo}"
-
-class Administrador(Usuario):
-    def __str__(self):
-        return f"Administrador: {self.nombre}"
-    
 
 class Ecoladrillo(models.Model):
     SIZES = [
@@ -98,9 +78,15 @@ class RegistroEcoladrillo(models.Model):
     fecha = models.DateField()
     ecoladrillo = models.ForeignKey(Ecoladrillo, on_delete=models.CASCADE)
     cantidad = models.IntegerField(default=0)
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE,
+        related_name='registros_ecoladrillos',
+        help_text="Usuario que registró la producción"
+    )
 
     def __str__(self):
-        return f"Registro {self.id_registro} - {self.ecoladrillo.nombre} - Fecha: {self.fecha} - Cantidad: {self.cantidad}"
+        return f"Registro {self.id_registro} - {self.ecoladrillo.nombre} - Fecha: {self.fecha} - Cantidad: {self.cantidad} - Usuario: {self.usuario.get_full_name()}"
     
     def save(self, *args, **kwargs):
         if not self.pk:
@@ -141,9 +127,15 @@ class RetiroEcoladrillo(models.Model):
     ecoladrillo = models.ForeignKey(Ecoladrillo, on_delete=models.CASCADE)
     cantidad = models.IntegerField(default=0)
     motivo = models.CharField(max_length=200)
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE,
+        related_name='retiros_ecoladrillos',
+        help_text="Usuario que realizó el retiro"
+    )
 
     def __str__(self):
-        return f"Retiro {self.id_retiro} - {self.ecoladrillo.nombre} - Cantidad: {self.cantidad}"
+        return f"Retiro {self.id_retiro} - {self.ecoladrillo.nombre} - Cantidad: {self.cantidad} - Usuario: {self.usuario.get_full_name()}"
     
     def save(self, *args, **kwargs):
         if not self.pk:
@@ -175,9 +167,15 @@ class RegistroMaterial(models.Model):
     cantidad = models.IntegerField(default=0)
     material = models.ForeignKey(Material, on_delete=models.CASCADE)
     origen = models.CharField(max_length=100, default='')
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE,
+        related_name='registros_materiales',
+        help_text="Usuario que registró el material"
+    )
 
     def __str__(self):
-        return self.id_ingreso
+        return f"Registro Material {self.id_ingreso} - {self.material.nombre} - Usuario: {self.usuario.get_full_name()}"
 
 class Reporte(models.Model):
     id_reporte = models.AutoField(primary_key=True)

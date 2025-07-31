@@ -1,16 +1,16 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.utils import timezone
 from datetime import datetime, timedelta
 
 from ..models import (
-    Operario, Administrador, Ecoladrillo, Material,
+    Ecoladrillo, Material,
     RegistroEcoladrillo, RetiroEcoladrillo, RegistroMaterial, Reporte
 )
 from .serializers import (
-    OperarioSerializer, AdministradorSerializer, EcoladrilloSerializer,
+    EcoladrilloSerializer,
     MaterialSerializer, RegistroEcoladrilloSerializer, RetiroEcoladrilloSerializer,
     RegistroMaterialSerializer, ReporteSerializer
 )
@@ -56,20 +56,10 @@ class BaseViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({'error': f'Error inesperado: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class OperarioViewSet(BaseViewSet):
-    queryset = Operario.objects.all()
-    serializer_class = OperarioSerializer
-    permission_classes = [AllowAny]  # Por ahora sin autenticación
-
-class AdministradorViewSet(BaseViewSet):
-    queryset = Administrador.objects.all()
-    serializer_class = AdministradorSerializer
-    permission_classes = [AllowAny]
-
 class EcoladrilloViewSet(BaseViewSet):
     queryset = Ecoladrillo.objects.all()
     serializer_class = EcoladrilloSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     
     @action(detail=False, methods=['get'])
     def stock_bajo(self, request):
@@ -107,7 +97,7 @@ class EcoladrilloViewSet(BaseViewSet):
 class MaterialViewSet(BaseViewSet):
     queryset = Material.objects.all()
     serializer_class = MaterialSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     
     @action(detail=False, methods=['get'])
     def por_tipo(self, request):
@@ -127,9 +117,13 @@ class MaterialViewSet(BaseViewSet):
         return Response(serializer.data)
 
 class RegistroEcoladrilloViewSet(BaseViewSet):
-    queryset = RegistroEcoladrillo.objects.all().select_related('ecoladrillo', 'ecoladrillo__material_principal')
+    queryset = RegistroEcoladrillo.objects.all().select_related('ecoladrillo', 'ecoladrillo__material_principal', 'usuario')
     serializer_class = RegistroEcoladrilloSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+    
+    def perform_create(self, serializer):
+        """Asignar automáticamente el usuario autenticado al crear un registro"""
+        serializer.save(usuario=self.request.user)
     
     @action(detail=False, methods=['get'])
     def por_fecha(self, request):
@@ -147,9 +141,13 @@ class RegistroEcoladrilloViewSet(BaseViewSet):
         return Response(serializer.data)
 
 class RetiroEcoladrilloViewSet(BaseViewSet):
-    queryset = RetiroEcoladrillo.objects.all().select_related('ecoladrillo')
+    queryset = RetiroEcoladrillo.objects.all().select_related('ecoladrillo', 'usuario')
     serializer_class = RetiroEcoladrilloSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+    
+    def perform_create(self, serializer):
+        """Asignar automáticamente el usuario autenticado al crear un retiro"""
+        serializer.save(usuario=self.request.user)
     
     @action(detail=False, methods=['get'])
     def por_fecha(self, request):
@@ -177,9 +175,13 @@ class RetiroEcoladrilloViewSet(BaseViewSet):
         return Response({'error': 'Parámetro ecoladrillo_id requerido'}, status=400)
 
 class RegistroMaterialViewSet(BaseViewSet):
-    queryset = RegistroMaterial.objects.all().select_related('material')
+    queryset = RegistroMaterial.objects.all().select_related('material', 'usuario')
     serializer_class = RegistroMaterialSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+    
+    def perform_create(self, serializer):
+        """Asignar automáticamente el usuario autenticado al crear un registro de material"""
+        serializer.save(usuario=self.request.user)
     
     def create(self, request, *args, **kwargs):
         """Crear registro y actualizar cantidad del material automáticamente"""
@@ -207,7 +209,7 @@ class RegistroMaterialViewSet(BaseViewSet):
 class ReporteViewSet(BaseViewSet):
     queryset = Reporte.objects.all()
     serializer_class = ReporteSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     
     @action(detail=False, methods=['get'])
     def resumen_inventario(self, request):

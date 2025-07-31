@@ -93,6 +93,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users',  # Nueva app de usuarios
     'Inventario',
     'rest_framework',
     'rest_framework.authtoken',
@@ -185,6 +186,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Modelo de usuario personalizado
+AUTH_USER_MODEL = 'users.Usuario'
 
 # Controla la redirección por defecto de Django al hacer login/logout
 LOGIN_REDIRECT_URL = '/api/users/me/'

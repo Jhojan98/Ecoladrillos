@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('Inventario.api.urls')),  # API endpoints
     path('api/auth/', include('Inventario.api.auth_urls')),  # Endpoints de autenticación
+    path('api/users/', include('users.api.urls')),  # API de usuarios
 ]
