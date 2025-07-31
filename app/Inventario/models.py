@@ -38,6 +38,15 @@ class Ecoladrillo(models.Model):
         self.cantidad += cantidad
         self.save()
     
+    def reducir_stock(self, cantidad):
+        """Reduce la cantidad de ecoladrillos"""
+        if cantidad <= 0:
+            raise ValueError("La cantidad debe ser mayor a cero")
+        if self.cantidad < cantidad:
+            raise ValueError(f"No hay suficientes ecoladrillos disponibles. Stock actual: {self.cantidad}")
+        self.cantidad -= cantidad
+        self.save()
+    
 
 class Material(models.Model):
     id_insumo = models.AutoField(primary_key=True)
@@ -103,11 +112,35 @@ class RegistroEcoladrillo(models.Model):
 class RetiroEcoladrillo(models.Model):
     id_retiro = models.AutoField(primary_key=True)
     fecha = models.DateField()
+    ecoladrillo = models.ForeignKey(Ecoladrillo, on_delete=models.CASCADE)
     cantidad = models.IntegerField(default=0)
     motivo = models.CharField(max_length=200)
 
     def __str__(self):
-      return self.motivo
+        return f"Retiro {self.id_retiro} - {self.ecoladrillo.nombre} - Cantidad: {self.cantidad}"
+    
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            """Reduce la cantidad de ecoladrillos cuando se crea un nuevo retiro"""
+            
+            if self.cantidad <= 0:
+                raise ValueError("La cantidad debe ser mayor a cero")
+            
+            if not self.ecoladrillo:
+                raise ValueError("El ecoladrillo es requerido")
+            
+            if self.ecoladrillo.cantidad < self.cantidad:
+                raise ValueError(f"No hay suficientes ecoladrillos disponibles. Stock actual: {self.ecoladrillo.cantidad}")
+            
+            # Guardar el retiro primero
+            super().save(*args, **kwargs)
+            
+            # Luego reducir el stock del ecoladrillo
+            self.ecoladrillo.cantidad -= self.cantidad
+            self.ecoladrillo.save()
+        else:
+            # Si ya existe, solo guardar sin modificar stock
+            super().save(*args, **kwargs)
     
 class RegistroMaterial(models.Model):
     id_registro_material = models.AutoField(primary_key=True)

@@ -14,18 +14,59 @@ from .serializers import (
     MaterialSerializer, RegistroEcoladrilloSerializer, RetiroEcoladrilloSerializer,
     RegistroMaterialSerializer, ReporteSerializer
 )
+from .exceptions import format_validation_errors
 
-class OperarioViewSet(viewsets.ModelViewSet):
+class BaseViewSet(viewsets.ModelViewSet):
+    """ViewSet base con manejo consistente de errores"""
+    
+    def create(self, request, *args, **kwargs):
+        """Crear objeto con manejo de errores estandarizado"""
+        serializer = self.get_serializer(data=request.data)
+        
+        if not serializer.is_valid():
+            # Formatear errores de validación
+            errores = format_validation_errors(serializer.errors)
+            return Response({'errores': errores}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            # Intentar guardar el objeto
+            instance = serializer.save()
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        except ValueError as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': f'Error inesperado: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def update(self, request, *args, **kwargs):
+        """Actualizar objeto con manejo de errores estandarizado"""
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        
+        if not serializer.is_valid():
+            errores = format_validation_errors(serializer.errors)
+            return Response({'errores': errores}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            serializer.save()
+            return Response(serializer.data)
+        except ValueError as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': f'Error inesperado: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class OperarioViewSet(BaseViewSet):
     queryset = Operario.objects.all()
     serializer_class = OperarioSerializer
     permission_classes = [AllowAny]  # Por ahora sin autenticación
 
-class AdministradorViewSet(viewsets.ModelViewSet):
+class AdministradorViewSet(BaseViewSet):
     queryset = Administrador.objects.all()
     serializer_class = AdministradorSerializer
     permission_classes = [AllowAny]
 
-class EcoladrilloViewSet(viewsets.ModelViewSet):
+class EcoladrilloViewSet(BaseViewSet):
     queryset = Ecoladrillo.objects.all()
     serializer_class = EcoladrilloSerializer
     permission_classes = [AllowAny]
@@ -36,8 +77,34 @@ class EcoladrilloViewSet(viewsets.ModelViewSet):
         ecoladrillos_bajo_stock = self.queryset.filter(cantidad__lt=10)
         serializer = self.get_serializer(ecoladrillos_bajo_stock, many=True)
         return Response(serializer.data)
+    
+    @action(detail=True, methods=['get'])
+    def stock_disponible(self, request, pk=None):
+        """Obtener la cantidad disponible de un ecoladrillo específico"""
+        ecoladrillo = self.get_object()
+        return Response({
+            'id_ecoladrillo': ecoladrillo.id_ecoladrillo,
+            'nombre': ecoladrillo.nombre,
+            'cantidad_disponible': ecoladrillo.cantidad
+        })
+    
+    @action(detail=False, methods=['get'])
+    def reporte_stock(self, request):
+        """Reporte general de stock de todos los ecoladrillos"""
+        ecoladrillos = self.get_queryset()
+        stock_total = sum(e.cantidad for e in ecoladrillos)
+        stock_bajo = ecoladrillos.filter(cantidad__lt=10).count()
+        sin_stock = ecoladrillos.filter(cantidad=0).count()
+        
+        return Response({
+            'total_tipos_ecoladrillos': ecoladrillos.count(),
+            'stock_total': stock_total,
+            'tipos_con_stock_bajo': stock_bajo,
+            'tipos_sin_stock': sin_stock,
+            'ecoladrillos': self.get_serializer(ecoladrillos, many=True).data
+        })
 
-class MaterialViewSet(viewsets.ModelViewSet):
+class MaterialViewSet(BaseViewSet):
     queryset = Material.objects.all()
     serializer_class = MaterialSerializer
     permission_classes = [AllowAny]
@@ -59,23 +126,10 @@ class MaterialViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(materiales, many=True)
         return Response(serializer.data)
 
-class RegistroEcoladrilloViewSet(viewsets.ModelViewSet):
+class RegistroEcoladrilloViewSet(BaseViewSet):
     queryset = RegistroEcoladrillo.objects.all().select_related('material_usado')
     serializer_class = RegistroEcoladrilloSerializer
     permission_classes = [AllowAny]
-    
-    def create(self, request, *args, **kwargs):
-        """Crear registro de ecoladrillo y manejar errores de stock"""
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        
-        try:
-            # Intentar guardar el registro (aquí se ejecuta el método save() del modelo)
-            registro = serializer.save()
-            headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-        except ValueError as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
     @action(detail=False, methods=['get'])
     def por_fecha(self, request):
@@ -92,37 +146,65 @@ class RegistroEcoladrilloViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-class RetiroEcoladrilloViewSet(viewsets.ModelViewSet):
-    queryset = RetiroEcoladrillo.objects.all()
+class RetiroEcoladrilloViewSet(BaseViewSet):
+    queryset = RetiroEcoladrillo.objects.all().select_related('ecoladrillo')
     serializer_class = RetiroEcoladrilloSerializer
     permission_classes = [AllowAny]
-
     
+    @action(detail=False, methods=['get'])
+    def por_fecha(self, request):
+        """Filtrar retiros por rango de fechas"""
+        fecha_inicio = request.query_params.get('fecha_inicio')
+        fecha_fin = request.query_params.get('fecha_fin')
+        
+        queryset = self.get_queryset()
+        if fecha_inicio:
+            queryset = queryset.filter(fecha__gte=fecha_inicio)
+        if fecha_fin:
+            queryset = queryset.filter(fecha__lte=fecha_fin)
+            
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def por_ecoladrillo(self, request):
+        """Filtrar retiros por tipo de ecoladrillo"""
+        ecoladrillo_id = request.query_params.get('ecoladrillo_id')
+        if ecoladrillo_id:
+            retiros = self.queryset.filter(ecoladrillo_id=ecoladrillo_id)
+            serializer = self.get_serializer(retiros, many=True)
+            return Response(serializer.data)
+        return Response({'error': 'Parámetro ecoladrillo_id requerido'}, status=400)
 
-class RegistroMaterialViewSet(viewsets.ModelViewSet):
+class RegistroMaterialViewSet(BaseViewSet):
     queryset = RegistroMaterial.objects.all().select_related('material')
     serializer_class = RegistroMaterialSerializer
     permission_classes = [AllowAny]
-
+    
     def create(self, request, *args, **kwargs):
         """Crear registro y actualizar cantidad del material automáticamente"""
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
         
-        # Guardar el registro
-        registro = serializer.save()
+        if not serializer.is_valid():
+            errores = format_validation_errors(serializer.errors)
+            return Response({'errores': errores}, status=status.HTTP_400_BAD_REQUEST)
         
-        # Actualizar cantidad del material
-        material = registro.material
         try:
+            # Guardar el registro
+            registro = serializer.save()
+            
+            # Actualizar cantidad del material
+            material = registro.material
             material.agregar_stock(registro.cantidad)
+            
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         except ValueError as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': f'Error inesperado: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-class ReporteViewSet(viewsets.ModelViewSet):
+class ReporteViewSet(BaseViewSet):
     queryset = Reporte.objects.all()
     serializer_class = ReporteSerializer
     permission_classes = [AllowAny]
@@ -141,3 +223,36 @@ class ReporteViewSet(viewsets.ModelViewSet):
             'fecha_consulta': timezone.now().date()
         }
         return Response(resumen)
+    
+    @action(detail=False, methods=['get'])
+    def resumen_retiros(self, request):
+        """Resumen de retiros de ecoladrillos"""
+        desde = request.query_params.get('fecha_inicio')
+        hasta = request.query_params.get('fecha_fin')
+        
+        retiros = RetiroEcoladrillo.objects.all()
+        if desde:
+            retiros = retiros.filter(fecha__gte=desde)
+        if hasta:
+            retiros = retiros.filter(fecha__lte=hasta)
+        
+        total_retiros = retiros.count()
+        cantidad_total_retirada = sum(r.cantidad for r in retiros)
+        
+        # Agrupar por tipo de ecoladrillo
+        retiros_por_tipo = {}
+        for retiro in retiros:
+            nombre = retiro.ecoladrillo.nombre
+            if nombre not in retiros_por_tipo:
+                retiros_por_tipo[nombre] = 0
+            retiros_por_tipo[nombre] += retiro.cantidad
+        
+        return Response({
+            'total_retiros': total_retiros,
+            'cantidad_total_retirada': cantidad_total_retirada,
+            'retiros_por_tipo': retiros_por_tipo,
+            'periodo': {
+                'fecha_inicio': desde,
+                'fecha_fin': hasta
+            }
+        })

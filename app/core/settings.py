@@ -42,6 +42,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',  # Para la interfaz web
     ],
+    'EXCEPTION_HANDLER': 'Inventario.api.exceptions.custom_exception_handler',
 }
 
 # Configuración JWT
