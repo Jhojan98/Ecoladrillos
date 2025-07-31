@@ -3,10 +3,10 @@ import { useAuth } from "@contexts/AuthContext";
 
 const apiBase = import.meta.env.VITE_API_URL;
 
-const buildUrl = (url, params = {}) => {
-  const query = new URLSearchParams(params).toString();
-  return query ? `${url}?${query}` : url;
-};
+// const buildUrl = (url, params = {}) => {
+//   const query = new URLSearchParams(params).toString();
+//   return query ? `${url}?${query}` : url;
+// };
 
 export const useMutation = () => {
   const [loading, setLoading] = useState(false);
@@ -18,10 +18,13 @@ export const useMutation = () => {
     method,
     endpoint,
     body = null,
-    errorMessage,
+    errorMessage = "Hubo un error",
+    verifyAuth = true,
     options = {}
   ) => {
-    if (!isAuthenticated && endpoint != "/login") return;
+    if (verifyAuth && !isAuthenticated) {
+      throw new Error("Usuario no autenticado");
+    }
 
     setLoading(true);
     setError(null);
@@ -41,25 +44,25 @@ export const useMutation = () => {
       });
 
       let result = {};
-      try {
-        if (response?.url && endpoint === "/login") return response; // Si es un redirect, devolver la responde con la URL
+      const contentType = response.headers.get("Content-Type");
+      if (contentType && contentType.includes("application/json")) {
         result = await response.json();
-      } catch (jsonError) {
-        // JSON vacio
-        throw new Error(
-          `(Sin JSON) No se pudo parsear la respuesta: ${jsonError.message}`
-        );
       }
 
       if (!response.ok) {
-        throw new Error(result.error || result.errors);
+        throw new Error(
+          result.error ||
+            result.errors ||
+            result.message ||
+            `HTTP error ${response.status}`
+        );
       }
       return result;
     } catch (err) {
       setError("Ha ocurrido un error"); // usuario
       console.error(`${errorMessage}: ${err.message}`); // desarrollador
       return {
-        errorMutationMsg: errorMessage || "Hubo un error", // para el codigo
+        errorMutationMsg: errorMessage, // para el codigo
         errorJsonMsg: err.message, // especifico del backend
       };
     } finally {
