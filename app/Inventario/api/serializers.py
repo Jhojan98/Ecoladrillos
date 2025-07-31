@@ -21,9 +21,13 @@ class AdministradorSerializer(serializers.ModelSerializer):
         }
 
 class EcoladrilloSerializer(serializers.ModelSerializer):
+    material_principal_nombre = serializers.CharField(source='material_principal.nombre', read_only=True)
+    size_display = serializers.CharField(source='get_size_display', read_only=True)
+    
     class Meta:
         model = Ecoladrillo
-        fields = ['id_ecoladrillo', 'nombre', 'descripcion', 'cantidad']
+        fields = ['id_ecoladrillo', 'nombre', 'descripcion', 'size', 'size_display', 
+                 'material_principal', 'material_principal_nombre', 'cantidad_material_requerida', 'cantidad']
 
 class MaterialSerializer(serializers.ModelSerializer):
     class Meta:
@@ -31,16 +35,18 @@ class MaterialSerializer(serializers.ModelSerializer):
         fields = ['id_insumo', 'nombre', 'tipo', 'cantidad_disponible', 'unidad_medida']
 
 class RegistroEcoladrilloSerializer(serializers.ModelSerializer):
-    material_usado_nombre = serializers.CharField(source='material_usado.nombre', read_only=True)
+    ecoladrillo_nombre = serializers.CharField(source='ecoladrillo.nombre', read_only=True)
     
     class Meta:
         model = RegistroEcoladrillo
-        fields = ['id_registro', 'fecha', 'cantidad', 'material_usado', 'material_usado_nombre']
+        fields = ['id_registro', 'fecha', 'ecoladrillo', 'ecoladrillo_nombre', 'cantidad']
 
 class RetiroEcoladrilloSerializer(serializers.ModelSerializer):
+    ecoladrillo_nombre = serializers.CharField(source='ecoladrillo.nombre', read_only=True)
+    
     class Meta:
         model = RetiroEcoladrillo
-        fields = ['id_retiro', 'fecha', 'cantidad', 'motivo']
+        fields = ['id_retiro', 'fecha', 'ecoladrillo', 'cantidad', 'motivo', 'ecoladrillo_nombre']
 
 class RegistroMaterialSerializer(serializers.ModelSerializer):
     material_nombre = serializers.CharField(source='material.nombre', read_only=True)

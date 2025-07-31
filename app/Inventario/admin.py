@@ -13,16 +13,20 @@ class AdministradorAdmin(admin.ModelAdmin):
     search_fields = ('nombre', 'email')
 @admin.register(Ecoladrillo)
 class EcoladrilloAdmin(admin.ModelAdmin):
-    list_display = ('id_ecoladrillo', 'nombre', 'descripcion', 'cantidad')
+    list_display = ('id_ecoladrillo', 'nombre', 'size', 'material_principal', 'cantidad_material_requerida', 'cantidad')
     search_fields = ('nombre',)
+    list_filter = ('size', 'material_principal')
+
 @admin.register(Material)
 class MaterialAdmin(admin.ModelAdmin):
     list_display = ('id_insumo', 'nombre', 'tipo', 'cantidad_disponible', 'unidad_medida')
-    search_fields = ('nombre', 'tipo')  
+    search_fields = ('nombre', 'tipo')
+
 @admin.register(RegistroEcoladrillo)
 class RegistroEcoladrilloAdmin(admin.ModelAdmin):
-    list_display = ('id_registro', 'fecha', 'cantidad', 'material_usado')
+    list_display = ('id_registro', 'fecha', 'ecoladrillo', 'cantidad')
     search_fields = ('fecha',)
+    list_filter = ('fecha', 'ecoladrillo')
 @admin.register(RetiroEcoladrillo)
 class RetiroEcoladrilloAdmin(admin.ModelAdmin):
     list_display = ('id_retiro', 'fecha', 'cantidad', 'motivo')
