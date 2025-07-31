@@ -1,11 +1,27 @@
-import React from "react";
 import { Bar, Doughnut } from "react-chartjs-2";
-import { Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from "chart.js";
+import {
+  Chart,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+} from "chart.js";
 import { Card, Table } from "./DashboardUI";
 import "./dashboard.scss";
 
 // Registrar los componentes necesarios de Chart.js
-Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement
+);
 // Datos mock para las métricas
 const mockData = {
   residuos: {
@@ -90,25 +106,84 @@ const heatData = {
   ],
 };
 
+const chartOptions = {
+  responsive: true,
+  // maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      position: "top",
+    },
+  },
+};
+
+const doughnutOptions = {
+  responsive: true,
+  // maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      position: "right",
+    },
+  },
+};
+
 export default function Dashboard() {
   return (
-    <div className="dashboard-container">
+    <div className="dashboard-container w-100 flex flex-column">
       <h2>Dashboard Ecoladrillos</h2>
-      <div className="dashboard-cards">
-        <Card title="Huella de carbono ahorrada" value={mockData.impacto.huellaCarbono + " kg CO₂"} />
-        <Card title="Pedidos pendientes" value={mockData.ventas.b2b + mockData.ventas.b2c - mockData.produccion.porMes} />
-        <Card title="Stock crítico" value={mockData.inventario.stockEcoladrillos < 500 ? "¡Alerta!" : "OK"} />
+      <div className="dashboard-cards flex">
+        <Card
+          title="Huella de carbono ahorrada"
+          value={mockData.impacto.huellaCarbono + " kg CO₂"}
+        />
+        <Card
+          title="Pedidos pendientes"
+          value={
+            mockData.ventas.b2b +
+            mockData.ventas.b2c -
+            mockData.produccion.porMes
+          }
+        />
+        <Card
+          title="Stock crítico"
+          value={
+            mockData.inventario.stockEcoladrillos < 500 ? "¡Alerta!" : "OK"
+          }
+        />
       </div>
-      <div className="dashboard-charts">
-        <Bar data={barData} />
-        <Doughnut data={heatData} />
+      <div className="dashboard-charts w-100 flex justify-center">
+        <div className="dashboard-bar flex justify-center">
+          <Bar className="bar" data={barData} />
+        </div>
+        <div className="dashboard-doughnut flex justify-center">
+          <Doughnut
+            className="doughnut"
+            data={heatData}
+          />
+        </div>
       </div>
       <div className="dashboard-table">
-        <Table data={[
-          { tipo: "Entrada", material: "Plástico", cantidad: 200, fecha: "2025-07-29" },
-          { tipo: "Salida", material: "Ecoladrillo", cantidad: 100, fecha: "2025-07-28" },
-          { tipo: "Entrada", material: "Vidrio", cantidad: 150, fecha: "2025-07-27" },
-        ]} />
+        <Table
+          data={[
+            {
+              tipo: "Entrada",
+              material: "Plástico",
+              cantidad: 200,
+              fecha: "2025-07-29",
+            },
+            {
+              tipo: "Salida",
+              material: "Ecoladrillo",
+              cantidad: 100,
+              fecha: "2025-07-28",
+            },
+            {
+              tipo: "Entrada",
+              material: "Vidrio",
+              cantidad: 150,
+              fecha: "2025-07-27",
+            },
+          ]}
+        />
       </div>
     </div>
   );

@@ -1,0 +1,9 @@
+.base-page {
+  overflow-y: auto;
+  .main-page-content {
+    // background: #f7f7f7;
+    height: fit-content;
+    max-width: 1500px;
+    width: 100%;
+  }
+}
