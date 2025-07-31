@@ -29,28 +29,33 @@ export function AppRouter() {
         isAuthenticated={isAuthenticated}
       />
       <Routes>
-        <Route path="/" element={isAuthenticated ? <HomePage /> : <Navigate to="/login" replace />} />
         <Route path="/login" element={<AuthPage AuthElement={Login} />} />
-      </Routes>
-      <BasePage>
-        <Routes>
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/registro-material" element={<RegistroMaterial />} />
+
+        <Route path="/" element={<BasePage />}>
+          <Route index element={<Navigate to="/dashboard" replace />} />
+          {/* <Route path="/home" element={<HomePage />} /> */}
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/consultar-inventario" element={<ConsultaInventario />} />
-          <Route path="/registrar-entrada" element={<RegistroEcoladrillos />} />
-          <Route path="/registrar-salida" element={<RegistroSalidaEcoladrillos />} />
+          <Route path="/registro-material" element={<RegistroMaterial />} />
           <Route
-            path="*"
-            element={
-              <div className="not-found flex flex-column align-center">
-                <h1>404 - Pagina no Encontrada</h1>
-                <p>Lo sentimos, la página que buscas no existe.</p>
-              </div>
-            }
+            path="/consultar-inventario"
+            element={<ConsultaInventario />}
           />
-        </Routes>
-      </BasePage>
+          <Route path="/registrar-entrada" element={<RegistroEcoladrillos />} />
+          <Route
+            path="/registrar-salida"
+            element={<RegistroSalidaEcoladrillos />}
+          />
+        </Route>
+        <Route
+          path="*"
+          element={
+            <div className="not-found flex flex-column align-center">
+              <h1>404 - Pagina no Encontrada</h1>
+              <p>Lo sentimos, la página que buscas no existe.</p>
+            </div>
+          }
+        />
+      </Routes>
     </Router>
   );
 }
