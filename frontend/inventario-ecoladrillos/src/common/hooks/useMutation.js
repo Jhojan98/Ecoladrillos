@@ -33,7 +33,7 @@ export const useMutation = () => {
       const isFormData = body instanceof FormData;
 
       // const response = await fetch(`${apiBase}${endpoint}`, {
-      const response = await fetch(`/api${endpoint}`, {
+      const response = await fetch(`/api/v1${endpoint}`, {
         method,
         credentials: "include", // Importante: incluir cookies en la petición
         headers: {
