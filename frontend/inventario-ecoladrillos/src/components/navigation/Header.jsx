@@ -58,7 +58,10 @@ export function Header(props) {
   useClickOutside([headerUser, userOptionsRef], () => {
     setShowUserOptions(false);
   });
-
+  
+  // ------ NAVEGACION ------
+  // menu desplegable
+  const [showDropdown, setShowDropdown] = useState(false);
   return (
     <header className="header flex justify-between">
       <div className="pagename-div flex">
@@ -68,7 +71,7 @@ export function Header(props) {
             className="btn-bars btn-primary"
             ref={barsRef}
             onClick={() => handleBarsClicked()}
-          >
+          >a
             <img className="header-bars" src={barsIcon} alt="bars icon" />
           </button>
         )}
@@ -89,6 +92,26 @@ export function Header(props) {
         <Link className="link" to="/inventory">
           Inventario
         </Link>
+
+        {/* desplegable */}
+        <div className="dropdown relative">
+          <button className="link btn-clean" onClick={() => setShowDropdown(!showDropdown)}>
+            Registro
+          </button>
+          {showDropdown && (
+            <div className="dropdown-menu flex flex-column absolute" onClick={() => setShowDropdown(false)}>
+              <Link className="link dropdown-item" to="/register/ecobricks">
+                Ecoladrillos
+              </Link>
+              <Link className="link dropdown-item" to="/register/material">
+                Materiales
+              </Link>
+              <Link className="link dropdown-item" to="/register/output">
+                Salida Ecoladrillos
+              </Link>
+            </div>
+          )}
+        </div>
 
         {/* usuario header */}
         {!isAuthenticated ? (

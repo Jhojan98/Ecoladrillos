@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 // hooks
 import { useNotifier } from "@hooks/useNotifier";
 // queries
-import { useEcoladrillos, useMaterials } from "@db/queries/Inventory";
+import { useGetEcoladrillos, useGetMaterials } from "@db/queries/Inventory";
 // styles
 import "./consultaInventario.scss";
 
@@ -13,20 +13,20 @@ export default function ConsultaInventario() {
   const [ecoladrillos, setEcoladrillos] = useState([]);
   const [materiales, setMateriales] = useState([]);
 
-  const { fetchData: getEcoladrillos } = useEcoladrillos();
-  const { fetchData: getMateriales } = useMaterials();
+  const { fetchData: getEcoladrillos } = useGetEcoladrillos();
+  const { fetchData: getMateriales } = useGetMaterials();
 
   useEffect(() => {
     const fetchData = async () => {
       const ecoladrillos = await getEcoladrillos();
       const materiales = await getMateriales();
 
-      if (ecoladrillos.fetchError) {
-        notify.error("Error al obtener ecoladrillos");
+      if (ecoladrillos.fetchErrorMsg) {
+        notify.error(ecoladrillos.fetchErrorMsg);
         return;
       }
-      if (materiales.fetchError) {
-        notify.error("Error al obtener materiales");
+      if (materiales.fetchErrorMsg) {
+        notify.error(materiales.fetchErrorMsg);
         return;
       }
 

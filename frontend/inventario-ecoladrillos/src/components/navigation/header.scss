@@ -34,6 +34,16 @@
     gap: 20px;
     min-width: 0;
     flex-shrink: 1;
+    .dropdown-menu {
+      top: 39px;
+      background-color: $primary-color;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+      border-radius: 0px 0px 7px 7px;
+      z-index: 30;
+      .dropdown-item {
+        padding: 7px 15px;
+      }
+    }
     .home-icon {
       width: 25px;
       height: 25px;
