@@ -1,22 +1,10 @@
-@use "sass:color";
-
-$verde: #4caf50;
-$azul: #2196f3;
-$gris: #6c757d;
-$rojo: #e53935;
-$blanco: #ffffff;
-$fondo: #f9fafb;
+@use "@styles/variables" as *;
 
 .consulta-inventario {
-  font-family: "Inter", sans-serif;
-  background: linear-gradient(135deg, #f0fdf4, #f9fafb);
-  min-height: 100vh;
   padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
 
   // Header
-  .header {
+  .inventory-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -25,141 +13,185 @@ $fondo: #f9fafb;
     h1 {
       font-size: 1.8rem;
       font-weight: bold;
-      color: $verde;
+      color: $primary-color;
     }
 
     .select-wrapper select {
       padding: 0.6rem 1rem;
       border-radius: 0.8rem;
       border: 1px solid #ddd;
-      background: $blanco;
+      background: $white;
       cursor: pointer;
       font-size: 1rem;
       transition: all 0.3s;
 
       &:hover {
-        border-color: $verde;
+        border-color: $primary-color;
       }
     }
+  }
+
+  // Subheader
+  .total-inventory {
+    background-color: $white;
+    margin-bottom: 1.5rem;
+    border-radius: 0.8rem;
+    padding: 0.8rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+    color: $gray-4;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
   }
 
   // Grid
-  .grid {
+  .inventory-cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 1.5rem;
-    flex: 1;
-  }
 
-  .card {
-    background: $blanco;
-    border-radius: 1.2rem;
-    padding: 1.5rem;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-    cursor: pointer;
+    .card {
+      background: $white;
+      border-radius: 1.2rem;
+      padding: 1.3rem;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      cursor: pointer;
+      height: fit-content;
 
-    &:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
-    }
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+      }
 
-    h3 {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 0.6rem;
-      color: $azul;
-    }
+      .card-type {
+        width: fit-content;
+        padding: 0.1rem 0.5rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        &.--Ecoladrillo-card {
+          color: $red-1;
+          background-color: $red-1-lighten;
+        }
+        &.--Material-card {
+          color: $green-1;
+          background-color: $green-1-lighten;
+        }
+      }
 
-    .id {
-      font-size: 0.9rem;
-      color: $gris;
-      margin-bottom: 0.4rem;
-    }
-
-    .cantidad {
-      margin-top: 0.8rem;
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: $verde;
-    }
-  }
-
-  // Footer
-  .footer-bar {
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(10px);
-    border-radius: 0.8rem;
-    padding: 0.8rem 1.2rem;
-    margin-top: 1.5rem;
-    font-size: 0.95rem;
-    font-weight: 500;
-    text-align: center;
-    color: $gris;
-    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
-  }
-
-  // Modal
-  .modal-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.55);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    animation: fadeIn 0.3s ease;
-    z-index: 50;
-  }
-
-  .modal {
-    background: $blanco;
-    border-radius: 1.2rem;
-    padding: 2rem;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    position: relative;
-    animation: slideIn 0.4s ease;
-
-    h2 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-      color: $verde;
-    }
-
-    .detalle {
-      p {
-        margin-bottom: 0.6rem;
-        font-size: 1rem;
-        strong {
-          color: $gris;
+      .card-header {
+        font-size: 2rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        line-height: 1;
+        .id-card {
+          margin-top: 0.2rem;
+          line-height: 1;
+          font-size: 0.8rem;
+          color: $gray-4;
+          background-color: $gray-0;
+          padding: 0.1rem 0.5rem;
+          border-radius: 999px;
+          border: 1px solid $gray-4;
+        }
+        h3 {
+          font-size: 1.5rem;
+          color: $blue-1;
+          font-weight: 500;
+        }
+      }
+      .description-card {
+        font-size: 0.9rem;
+        color: $gray-5;
+        line-height: 1;
+      }
+      .secondary-text-card {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: $blue-2;
+      }
+      .card-details{
+        b {
+          font-weight: 500;
         }
       }
     }
-
-    .close {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: transparent;
-      border: none;
-      font-size: 1.8rem;
-      cursor: pointer;
-      color: $gris;
-    }
   }
+
+  // // Modal
+  // .modal-bg {
+  //   position: fixed;
+  //   top: 0;
+  //   left: 0;
+  //   right: 0;
+  //   bottom: 0;
+  //   background: rgba(0, 0, 0, 0.55);
+  //   display: flex;
+  //   justify-content: center;
+  //   align-items: center;
+  //   animation: fadeIn 0.3s ease;
+  //   z-index: 50;
+  // }
+
+  // .modal {
+  //   background: $white;
+  //   border-radius: 1.2rem;
+  //   padding: 2rem;
+  //   width: 90%;
+  //   max-width: 500px;
+  //   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  //   position: relative;
+  //   animation: slideIn 0.4s ease;
+
+  //   h2 {
+  //     font-size: 1.5rem;
+  //     margin-bottom: 1rem;
+  //     color: $green-1;
+  //   }
+
+  //   .detalle {
+  //     p {
+  //       margin-bottom: 0.6rem;
+  //       font-size: 1rem;
+  //       strong {
+  //         color: $gray-4;
+  //       }
+  //     }
+  //   }
+
+  //   .close {
+  //     position: absolute;
+  //     top: 1rem;
+  //     right: 1rem;
+  //     background: transparent;
+  //     border: none;
+  //     font-size: 1.8rem;
+  //     cursor: pointer;
+  //     color: $gray-4;
+  //   }
+  // }
 }
 
-// Animaciones
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
+// // Animaciones
+// @keyframes fadeIn {
+//   from {
+//     opacity: 0;
+//   }
+//   to {
+//     opacity: 1;
+//   }
+// }
 
-@keyframes slideIn {
-  from { transform: translateY(30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
+// @keyframes slideIn {
+//   from {
+//     transform: translateY(30px);
+//     opacity: 0;
+//   }
+//   to {
+//     transform: translateY(0);
+//     opacity: 1;
+//   }
+// }

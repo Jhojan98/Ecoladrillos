@@ -80,14 +80,15 @@ export function Header(props) {
           InvetoryEco
         </Link>
       </div>
+
       <nav className="header-nav flex align-center">
-        <Link className="link--home link flex align-center" to="/home">
-          <HomeIcon className="home-icon" alt="home icon" />
-          <span>Inicio</span>
+        <Link className="link--home link flex align-center" to="/dashboard">
+          {/* <HomeIcon className="home-icon" alt="home icon" /> */}
+          <span>Dashboard</span>
         </Link>
-        {/* <Link className="link" to="/create_data">
-          Crear datos
-        </Link> */}
+        <Link className="link" to="/inventory">
+          Inventario
+        </Link>
 
         {/* usuario header */}
         {!isAuthenticated ? (
@@ -125,13 +126,13 @@ export function Header(props) {
 
 function UserOptions(props) {
   const { userOptionsRef, userName } = props; // referencia para el div de opciones del usuario
-  const { logout } = useAuth(); 
+  const { logout } = useAuth();
   const navigate = useNavigate();
 
   // función para cerrar sesión usando el sistema de cookies
   const handleLogout = async () => {
     await logout();
-    navigate("/home"); 
+    navigate("/home");
   };
 
   return (

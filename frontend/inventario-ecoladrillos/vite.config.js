@@ -6,6 +6,16 @@ import path from "path";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), svgr()],
+  server: {
+    port: 3000,
+    proxy: {
+      "/api/v1": {
+        target: "http://localhost:8000",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
   resolve: {
     alias: {
       "@icons": path.resolve(__dirname, "src/assets/icons"),
