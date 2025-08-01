@@ -1,14 +1,15 @@
 @use "@styles/variables" as *;
 
-// $neumorphic-color: #e0f2e9; // verde pastel muy suave
-// $neu-shadow-dark: #b6d1c3;
-// $neu-shadow-light: #ffffff;
+$neumorphic-color: #e0f2e9; // verde pastel muy suave
+$neu-shadow-dark: #b6d1c3;
+$neu-shadow-light: #ffffff;
+$neu-text-color: $green-1; // azul suave
 
 // neumorphic blue
-$neumorphic-color: #c6d7f5;
-$neu-shadow-dark: #a4b7d8;
-$neu-shadow-light: #e4edfc;
-$neu-text-color: #3d81c5;
+// $neumorphic-color: #c6d7f5;
+// $neu-shadow-dark: #a4b7d8;
+// $neu-shadow-light: #e4edfc;
+// $neu-text-color: #3d81c5;
 
 $neumorphic-shadow: 4px 4px 8px $neu-shadow-dark, -4px -4px 10px $neu-shadow-light;
 $neumorphic-input-shadow: inset 4px 4px 8px $neu-shadow-dark, inset -4px -4px 8px $neu-shadow-light;
@@ -23,7 +24,7 @@ $neumorphic-input-shadow: inset 4px 4px 8px $neu-shadow-dark, inset -4px -4px 8p
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  box-shadow: 0 0px 70px 70px $neumorphic-color;
+  // box-shadow: 0 0px 70px 70px $neumorphic-color;
 
   h1 {
     color: $neu-text-color;

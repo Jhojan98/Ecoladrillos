@@ -1,4 +1,3 @@
-
 // Migración de variables: si no existen, define valores por defecto aquí
 $background: #f7f9fa !default;
 $text: #222 !default;
@@ -7,19 +6,30 @@ $text: #222 !default;
 // @use '../../assets/styles/_variables.scss' as *;
 
 .home-page {
-  min-height: 100vh;
+  // min-height: 100vh;
   background: $background;
   color: $text;
   transition: background 0.3s, color 0.3s;
   position: relative;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
 
   &.dark {
     background: #181c1f;
     color: #f1f1f1;
-    .card, .search-bar, .fab-menu, .cta-btn { background: #23272b; color: #f1f1f1; }
-    .card { box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
-    .search-bar input { background: #23272b; color: #f1f1f1; }
+    .card,
+    .search-bar,
+    .fab-menu,
+    .cta-btn {
+      background: #23272b;
+      color: #f1f1f1;
+    }
+    .card {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+    .search-bar input {
+      background: #23272b;
+      color: #f1f1f1;
+    }
   }
 }
 
@@ -35,8 +45,10 @@ $text: #222 !default;
 }
 
 .hero-section {
-  position: relative;
-  height: 340px;
+  position: absolute;
+  width: 100%;
+  // height: 340px;
+  // height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,16 +59,17 @@ $text: #222 !default;
     overflow: hidden;
     z-index: 1;
     .video-bg {
-  width: 100vw;
-  height: 100vh;
-  object-fit: cover;
-  position: absolute;
-  top: 0; left: 0;
-  z-index: 0;
-}
+      // width: 100vw;
+      // height: 100vh;
+      object-fit: cover;
+      position: absolute;
+      // top: 0;
+      // left: 0;
+      z-index: 0;
+    }
   }
   .hero-content {
-    position: relative;
+    position: absolute;
     z-index: 2;
     text-align: center;
     h1 {
@@ -64,24 +77,24 @@ $text: #222 !default;
       font-weight: 700;
       color: #fff;
       margin-bottom: 1.5rem;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
-    .cta-btn {
-      background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
-      color: #fff;
-      font-weight: 600;
-      border: none;
-      border-radius: 30px;
-      padding: 0.9rem 2.2rem;
-      font-size: 1.2rem;
-      box-shadow: 0 4px 12px rgba(67,233,123,0.15);
-      cursor: pointer;
-      transition: box-shadow 0.3s, transform 0.3s;
-      &:hover {
-        box-shadow: 0 8px 24px rgba(67,233,123,0.25);
-        transform: translateY(-2px);
-      }
-    }
+    // .cta-btn {
+    //   background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+    //   color: #fff;
+    //   font-weight: 600;
+    //   border: none;
+    //   border-radius: 30px;
+    //   padding: 0.9rem 2.2rem;
+    //   font-size: 1.2rem;
+    //   box-shadow: 0 4px 12px rgba(67, 233, 123, 0.15);
+    //   cursor: pointer;
+    //   transition: box-shadow 0.3s, transform 0.3s;
+    //   &:hover {
+    //     box-shadow: 0 8px 24px rgba(67, 233, 123, 0.25);
+    //     transform: translateY(-2px);
+    //   }
+    // }
   }
 }
 
@@ -89,14 +102,14 @@ $text: #222 !default;
   display: flex;
   justify-content: center;
   gap: 2rem;
-  margin: -60px auto 2.5rem auto;
+  // margin: 0px auto 2.5rem auto;
   max-width: 1100px;
   position: relative;
   z-index: 3;
   .card {
     background: #fff;
     border-radius: 18px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.10);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 2rem 1.5rem 1.5rem 1.5rem;
     min-width: 210px;
     min-height: 180px;
@@ -141,7 +154,7 @@ $text: #222 !default;
         transform: translateX(-50%);
         background: #fff;
         border-radius: 12px;
-        box-shadow: 0 4px 16px rgba(67,233,123,0.13);
+        box-shadow: 0 4px 16px rgba(67, 233, 123, 0.13);
         padding: 0.7rem 1.2rem;
         display: flex;
         flex-direction: column;
@@ -167,9 +180,15 @@ $text: #222 !default;
 }
 
 @keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(67,233,123,0.4); }
-  70% { box-shadow: 0 0 0 10px rgba(67,233,123,0); }
-  100% { box-shadow: 0 0 0 0 rgba(67,233,123,0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(67, 233, 123, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(67, 233, 123, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(67, 233, 123, 0);
+  }
 }
 
 .search-bar {
@@ -177,7 +196,7 @@ $text: #222 !default;
   max-width: 420px;
   background: #fff;
   border-radius: 30px;
-  box-shadow: 0 2px 8px rgba(67,233,123,0.08);
+  box-shadow: 0 2px 8px rgba(67, 233, 123, 0.08);
   display: flex;
   align-items: center;
   padding: 0.5rem 1.2rem;
@@ -206,7 +225,7 @@ $text: #222 !default;
     width: 100%;
     background: #fff;
     border-radius: 0 0 16px 16px;
-    box-shadow: 0 4px 12px rgba(67,233,123,0.10);
+    box-shadow: 0 4px 12px rgba(67, 233, 123, 0.1);
     z-index: 5;
     li {
       padding: 0.7rem 1.2rem;
@@ -234,7 +253,7 @@ $text: #222 !default;
     color: #fff;
     font-size: 2.2rem;
     border: none;
-    box-shadow: 0 4px 16px rgba(67,233,123,0.18);
+    box-shadow: 0 4px 16px rgba(67, 233, 123, 0.18);
     cursor: pointer;
     transition: background 0.3s, transform 0.3s;
     &:hover {
@@ -249,7 +268,7 @@ $text: #222 !default;
     gap: 0.5rem;
     background: #fff;
     border-radius: 14px;
-    box-shadow: 0 4px 16px rgba(67,233,123,0.13);
+    box-shadow: 0 4px 16px rgba(67, 233, 123, 0.13);
     padding: 0.7rem 1.2rem;
     button {
       background: none;
@@ -272,12 +291,21 @@ $text: #222 !default;
   .cards-section {
     flex-wrap: wrap;
     gap: 1.2rem;
-    .card { min-width: 160px; }
+    .card {
+      min-width: 160px;
+    }
   }
 }
 
 @media (max-width: 600px) {
-  .hero-section { height: 220px; }
-  .cards-section { flex-direction: column; align-items: center; }
-  .search-bar { max-width: 98vw; }
+  .hero-section {
+    height: 220px;
+  }
+  .cards-section {
+    flex-direction: column;
+    align-items: center;
+  }
+  .search-bar {
+    max-width: 98vw;
+  }
 }

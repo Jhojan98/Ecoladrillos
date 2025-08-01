@@ -38,7 +38,7 @@ export default function RegistroSalidaEcoladrillos() {
   };
 
   return (
-    <div className="registro-ecoladrillos-container">
+    <div className="registro-ecoladrillos-container w-100">
       <h2>Registrar Salida de Ecoladrillos</h2>
       <form onSubmit={handleSubmit} className="registro-form">
         <label>
