@@ -33,7 +33,7 @@ export function AppRouter() {
 
         <Route path="/" element={<BasePage />}>
           <Route index element={<Navigate to="/dashboard" replace />} />
-          {/* <Route path="/home" element={<HomePage />} /> */}
+          <Route path="/home" element={<HomePage />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/inventory" element={<ConsultaInventario />} />
 

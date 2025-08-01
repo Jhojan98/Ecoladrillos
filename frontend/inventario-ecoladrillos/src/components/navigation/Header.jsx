@@ -85,6 +85,10 @@ export function Header(props) {
       </div>
 
       <nav className="header-nav flex align-center">
+        <Link className="link--home link flex align-center" to="/home">
+          <HomeIcon className="home-icon" alt="home icon" />
+          <span>Home</span>
+        </Link>
         <Link className="link--home link flex align-center" to="/dashboard">
           {/* <HomeIcon className="home-icon" alt="home icon" /> */}
           <span>Dashboard</span>
