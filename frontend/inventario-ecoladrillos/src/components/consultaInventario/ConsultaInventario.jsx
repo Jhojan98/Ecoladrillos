@@ -168,7 +168,7 @@ function Card(props) {
 
       <div className="card-details">
         <p className="secondary-text-card">
-          {quantity} {measureUnit || "unidades"}
+          {quantity} {measureUnit || "unidades"} {cartType === "Material" ? "disponibles" : "producidos"}
         </p>
 
         {sizeEco && (
