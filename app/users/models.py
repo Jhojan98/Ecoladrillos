@@ -15,7 +15,7 @@ class Usuario(AbstractUser):
     tipo_usuario = models.CharField(
         max_length=20, 
         choices=TIPO_USUARIO_CHOICES,
-        default='operario'
+        help_text="Tipo de usuario: operario o administrador"
     )
     
     def __str__(self):

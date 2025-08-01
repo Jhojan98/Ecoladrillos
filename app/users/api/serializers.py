@@ -87,8 +87,13 @@ class UsuarioCreateSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    password = serializers.CharField()
+    username = serializers.CharField(
+        help_text="Tu nombre de usuario"
+    )
+    password = serializers.CharField(
+        style={'input_type': 'password'},
+        help_text="Tu contraseña"
+    )
 
     def validate(self, attrs):
         username = attrs.get('username')
@@ -117,6 +122,72 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 'Debe incluir "username" y "password".'
             )
+
+
+class RegistroUsuarioSerializer(serializers.ModelSerializer):
+    """
+    Serializer para registro público de usuarios
+    """
+    password = serializers.CharField(
+        write_only=True, 
+        min_length=8,
+        style={'input_type': 'password'},
+        help_text="Mínimo 8 caracteres"
+    )
+    password_confirm = serializers.CharField(
+        write_only=True,
+        style={'input_type': 'password'},
+        help_text="Confirma tu contraseña"
+    )
+    tipo_usuario = serializers.ChoiceField(
+        choices=Usuario.TIPO_USUARIO_CHOICES,
+        required=True,
+        help_text="Selecciona si eres operario o administrador"
+    )
+    username = serializers.CharField(
+        help_text="Nombre de usuario único"
+    )
+    email = serializers.EmailField(
+        help_text="Dirección de correo electrónico"
+    )
+    first_name = serializers.CharField(
+        help_text="Tu nombre"
+    )
+    last_name = serializers.CharField(
+        help_text="Tu apellido"
+    )
+
+    class Meta:
+        model = Usuario
+        fields = [
+            'username', 'email', 'first_name', 'last_name',
+            'tipo_usuario', 'password', 'password_confirm'
+        ]
+
+    def validate_username(self, value):
+        if Usuario.objects.filter(username=value).exists():
+            raise serializers.ValidationError("Este nombre de usuario ya está en uso.")
+        return value
+
+    def validate_email(self, value):
+        if Usuario.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Este email ya está registrado.")
+        return value
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password_confirm']:
+            raise serializers.ValidationError("Las contraseñas no coinciden")
+        return attrs
+
+    def create(self, validated_data):
+        validated_data.pop('password_confirm')
+        password = validated_data.pop('password')
+        
+        user = Usuario.objects.create_user(**validated_data)
+        user.set_password(password)
+        user.save()
+        
+        return user
 
 
 class CambiarPasswordSerializer(serializers.Serializer):
