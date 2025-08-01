@@ -1,49 +1,250 @@
-import React, { useState } from 'react';
-import './registroMaterial.scss';
+import { useState, useEffect } from "react";
+// hooks
+import { useNotifier } from "@hooks/useNotifier";
+// queries
+import { useGetMaterials } from "@db/queries/Inventory";
+import {
+  useGetRegistersMaterials,
+  useRegisterMaterialMutation,
+} from "@db/queries/Material";
+// styles
+import "./registroMaterial.scss";
 
-const RegistroMaterial = () => {
+export default function RegistroMaterial() {
+  const notify = useNotifier();
+
+  // --- OBTENER MATERIALES ---
   const [materiales, setMateriales] = useState([]);
-  const [form, setForm] = useState({
-    id: '',
-    nombre: '',
-    tipo: '',
-    cantidad: '',
-    unidad: ''
-  });
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const { fetchData: getMaterials } = useGetMaterials();
+
+  const fetchMaterials = async () => {
+    const materials = await getMaterials();
+
+    if (materials.fetchErrorMsg) {
+      notify.error(materials.fetchErrorMsg);
+      return;
+    }
+
+    setMateriales(materials.results || []);
   };
 
-  const handleSubmit = (e) => {
+  // ------ OBTENER REGISTROS MATERIALES ------
+  const [registers, setRegisters] = useState([]);
+
+  const { fetchData: getRegisters } = useGetRegistersMaterials();
+
+  const fetchRegisters = async () => {
+    const response = await getRegisters();
+
+    if (response.fetchErrorMsg) {
+      notify.error(response.fetchErrorMsg);
+      return;
+    }
+
+    setRegisters(response.results || []);
+  };
+
+  useEffect(() => {
+    fetchRegisters();
+    fetchMaterials();
+  }, []);
+
+  // ------ FORMULARIO DE REGISTRO ------
+  const [registerMaterialForm, setRegisterMaterialForm] = useState({
+    idIngreso: 0,
+    idMaterial: 0,
+    cantidad: 0,
+    fecha: "",
+    origen: "",
+  });
+  const [error, setError] = useState("");
+
+  // ------ REGISTRO DE MATERIALES ------
+  const registerMaterialMutate = useRegisterMaterialMutation();
+
+  const onSubmitRegister = async (e) => {
     e.preventDefault();
-    setMateriales([...materiales, form]);
-    setForm({ id: '', nombre: '', tipo: '', cantidad: '', unidad: '' });
+
+    let newErrors = {};
+    if (!registerMaterialForm.idIngreso) {
+      newErrors.idIngreso = "El ID de ingreso es requerido";
+    }
+    if (!registerMaterialForm.idMaterial) {
+      newErrors.idMaterial = "Selecciona un material válido";
+    }
+    if (registerMaterialForm.cantidad <= 0) {
+      newErrors.cantidad = "La cantidad debe ser mayor a 0";
+    }
+    if (!registerMaterialForm.fecha) {
+      newErrors.fecha = "Selecciona una fecha válida";
+    }
+    if (!registerMaterialForm.origen.trim()) {
+      newErrors.origen = "El origen es requerido";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setError(newErrors);
+      return;
+    }
+    setError("");
+
+    // Enviar petición
+    const newRegister = {
+      id_ingreso: registerMaterialForm.idIngreso,
+      fecha: registerMaterialForm.fecha,
+      material: registerMaterialForm.idMaterial,
+      cantidad: registerMaterialForm.cantidad,
+      origen: registerMaterialForm.origen,
+    };
+
+    console.log("Nuevo registro:", newRegister);
+
+    const response = await registerMaterialMutate.post(newRegister);
+    if (response.errorMutationMsg) {
+      notify.error(response.errorMutationMsg);
+      return;
+    }
+    notify.success("Material registrado");
+    fetchRegisters();
+    
+    // Limpiar formulario
+    setRegisterMaterialForm({
+      idIngreso: 0,
+      idMaterial: 0,
+      cantidad: 0,
+      fecha: "",
+      origen: "",
+    });
   };
 
   return (
-    <div className="registro-material-page">
-      <h2>Registro de Materiales</h2>
-      <form className="registro-form" onSubmit={handleSubmit}>
-        <input name="id" value={form.id} onChange={handleChange} placeholder="ID" required />
-        <input name="nombre" value={form.nombre} onChange={handleChange} placeholder="Nombre" required />
-        <input name="tipo" value={form.tipo} onChange={handleChange} placeholder="Tipo" required />
-        <input name="cantidad" value={form.cantidad} onChange={handleChange} placeholder="Cantidad" type="number" required />
-        <input name="unidad" value={form.unidad} onChange={handleChange} placeholder="Unidad de medida" required />
-        <button type="submit">Agregar Material</button>
+    <div className="registro-container w-100">
+      <h1>Registro de Materiales</h1>
+      <form onSubmit={onSubmitRegister} className="registro-form">
+        <label>
+          ID de Ingreso:
+          <input
+            type="number"
+            value={registerMaterialForm.idIngreso}
+            onChange={(e) =>
+              setRegisterMaterialForm({
+                ...registerMaterialForm,
+                idIngreso: parseInt(e.target.value) || 0,
+              })
+            }
+            placeholder="Ingrese el ID de ingreso"
+          />
+          {error.idIngreso && (
+            <span className="error-msg">{error.idIngreso}</span>
+          )}
+        </label>
+        <label>
+          Tipo de Material:
+          <select
+            name="id_insumo"
+            value={registerMaterialForm.idMaterial}
+            onChange={(e) =>
+              setRegisterMaterialForm({
+                ...registerMaterialForm,
+                idMaterial: parseInt(e.target.value),
+              })
+            }
+          >
+            <option value="">Selecciona un material</option>
+            {materiales.map((material) => (
+              <option
+                key={material.id_insumo}
+                value={material.id_insumo}
+              >
+                {material.nombre}
+              </option>
+            ))}
+          </select>
+          {error.idMaterial && (
+            <span className="error-msg">{error.idMaterial}</span>
+          )}
+        </label>
+        <label>
+          Cantidad:
+          <input
+            type="number"
+            value={registerMaterialForm.cantidad}
+            onChange={(e) =>
+              setRegisterMaterialForm({
+                ...registerMaterialForm,
+                cantidad: parseInt(e.target.value) || 0,
+              })
+            }
+            placeholder="Ingrese la cantidad"
+          />
+          {error.cantidad && (
+            <span className="error-msg">{error.cantidad}</span>
+          )}
+        </label>
+        <label>
+          Fecha:
+          <input
+            type="date"
+            value={registerMaterialForm.fecha}
+            onChange={(e) =>
+              setRegisterMaterialForm({ 
+                ...registerMaterialForm, 
+                fecha: e.target.value 
+              })
+            }
+          />
+          {error.fecha && <span className="error-msg">{error.fecha}</span>}
+        </label>
+        <label>
+          Origen:
+          <input
+            type="text"
+            value={registerMaterialForm.origen}
+            onChange={(e) =>
+              setRegisterMaterialForm({ 
+                ...registerMaterialForm, 
+                origen: e.target.value 
+              })
+            }
+            placeholder="Ingrese el origen del material"
+          />
+          {error.origen && (
+            <span className="error-msg">{error.origen}</span>
+          )}
+        </label>
+        <button className="btn-submit" type="submit">
+          Registrar
+        </button>
       </form>
-      <div className="materiales-list">
-        <h3>Materiales Registrados</h3>
-        <ul>
-          {materiales.map((mat, i) => (
-            <li key={i}>
-              <b>{mat.nombre}</b> ({mat.tipo}) - {mat.cantidad} {mat.unidad} [ID: {mat.id}]
-            </li>
+
+      {/* Registros recientes */}
+      <h3 className="registro-reciente">Registros recientes</h3>
+      <table className="registros-table">
+        <thead>
+          <tr>
+            <th>ID Registro</th>
+            <th>ID Ingreso</th>
+            <th>Fecha</th>
+            <th>Material</th>
+            <th>Cantidad</th>
+            <th>Origen</th>
+          </tr>
+        </thead>
+        <tbody>
+          {registers.map((reg) => (
+            <tr key={reg.id_registro_material}>
+              <td>{reg.id_registro_material}</td>
+              <td>{reg.id_ingreso}</td>
+              <td>{reg.fecha}</td>
+              {/* <td>{reg.material}</td> */}
+              <td>{materiales.find((mat) => mat.id_insumo === reg.material)?.nombre || 'N/A'}</td>
+              <td>{reg.cantidad}</td>
+              <td>{reg.origen}</td>
+            </tr>
           ))}
-        </ul>
-      </div>
+        </tbody>
+      </table>
     </div>
   );
-};
-
-export default RegistroMaterial;
+}

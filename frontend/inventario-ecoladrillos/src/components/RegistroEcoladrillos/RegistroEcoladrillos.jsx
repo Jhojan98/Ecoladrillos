@@ -101,7 +101,7 @@ export default function RegistroEcoladrillos() {
   };
 
   return (
-    <div className="registro-ecoladrillos-container w-100">
+    <div className="registro-container w-100">
       <h1>Registro de Ecoladrillos</h1>
       <form onSubmit={onSubmitRegister} className="registro-form">
         <label>

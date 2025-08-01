@@ -13,7 +13,7 @@
     h1 {
       font-size: 2rem;
       font-weight: bold;
-      color: $primary-color;
+      color: $green-1;
     }
 
     .select-wrapper select {
@@ -75,8 +75,8 @@
           background-color: $red-1-lighten;
         }
         &.--Material-card {
-          color: $green-1;
-          background-color: $green-1-lighten;
+          color: $blue-1;
+          background-color: $blue-1-lighten;
         }
       }
 
@@ -99,7 +99,7 @@
         }
         h3 {
           font-size: 1.5rem;
-          color: $blue-1;
+          color: $green-1;
           font-weight: 500;
         }
       }
@@ -111,7 +111,7 @@
       .secondary-text-card {
         font-size: 1.1rem;
         font-weight: bold;
-        color: $blue-2;
+        color: rgb(255, 200, 98)
       }
       .card-details{
         b {
