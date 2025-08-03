@@ -170,21 +170,34 @@ class RetiroEcoladrillo(models.Model):
     
 class RegistroMaterial(models.Model):
     id_registro_material = models.AutoField(primary_key=True)
-    id_ingreso = models.IntegerField()
     fecha = models.DateField()
     cantidad = models.IntegerField(default=0)
     material = models.ForeignKey(Material, on_delete=models.CASCADE)
     origen = models.CharField(max_length=100, default='')
 
     def __str__(self):
-        return self.id_ingreso
+        return f"Registro {self.id_registro_material} - {self.material.nombre} - Cantidad: {self.cantidad}"
 
 class Reporte(models.Model):
+    TIPOS_REPORTE = [
+        ('stock_fecha', 'Stock en Fecha'),
+        ('resumen_inventario', 'Resumen de Inventario'),
+        ('resumen_retiros', 'Resumen de Retiros'),
+    ]
+    
     id_reporte = models.AutoField(primary_key=True)
-    fecha_generacion = models.DateField()
-    fecha_inicio = models.DateField()
-    fecha_fin = models.DateField()
+    tipo_reporte = models.CharField(max_length=20, choices=TIPOS_REPORTE)
+    fecha_generacion = models.DateTimeField(auto_now_add=True)
+    operario = models.ForeignKey(Operario, on_delete=models.SET_NULL, null=True, blank=True)
+    fecha_consulta = models.DateField(null=True, blank=True)  # Para reportes de stock en fecha
+    fecha_inicio = models.DateField(null=True, blank=True)   # Para reportes de período
+    fecha_fin = models.DateField(null=True, blank=True)      # Para reportes de período
+    datos_reporte = models.JSONField()  # Almacena el contenido del reporte
 
     def __str__(self):
-        return f"Reporte {self.id_reporte} - Fecha: {self.fecha_generacion}"
+        operario_nombre = self.operario.nombre if self.operario else 'Sistema'
+        return f"Reporte {self.id_reporte} - {self.get_tipo_reporte_display()} - {operario_nombre}"
+
+    class Meta:
+        ordering = ['-fecha_generacion']
 
