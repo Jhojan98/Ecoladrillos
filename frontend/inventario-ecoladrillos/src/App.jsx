@@ -18,7 +18,7 @@ function App() {
         <HeaderBarsProvider>
           <PrimeReactProvider>
             <AppRouter />
-            <ToastContainer position="bottom-right" autoClose={3000} />
+            <ToastContainer position="bottom-right" autoClose={3000} limit={3} />
             <ConfirmDialog />
           </PrimeReactProvider>
         </HeaderBarsProvider>
