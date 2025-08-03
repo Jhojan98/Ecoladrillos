@@ -89,8 +89,6 @@ export default function RegistroEcoladrillos() {
       cantidad: registerEcoForm.cantidad,
     };
 
-    console.log("Nuevo registro:", newResgister);
-
     const response = await registerEcobricksMutate.post(newResgister);
     if (response.errorMutationMsg) {
       notify.error(response.errorMutationMsg);

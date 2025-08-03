@@ -59,4 +59,27 @@ export const useRegisterEcobricksMutation = () => {
   };
 };
 
+// GET retiros
+export const useGetRetirosEcobricks = () => {
+  return useFetch(
+    "/retiros-ecoladrillo",
+    "Error al obtener los retiros de ecoladrillos"
+  );
+};
+
 // retiro
+export const useRetiroEcoladrillosMutation = () => {
+  const post = useMutation();
+
+  return {
+    post: (data) =>
+      post.mutate(
+        "POST",
+        "/retiros-ecoladrillo/",
+        data,
+        "Error al registrar el retiro de ecoladrillos"
+      ),
+    loading: post.loading,
+    error: post.error,
+  };
+}

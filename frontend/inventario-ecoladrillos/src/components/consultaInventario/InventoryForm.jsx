@@ -152,6 +152,7 @@ export function InventoryForm(props) {
                     onChange={handleInputChange}
                     min="0"
                     step="1"
+                    disabled={isEditing}
                     required
                   />
                 </div>

@@ -52,7 +52,6 @@ export default function RegistroMaterial() {
 
   // ------ FORMULARIO DE REGISTRO ------
   const [registerMaterialForm, setRegisterMaterialForm] = useState({
-    idIngreso: 0,
     idMaterial: 0,
     cantidad: 0,
     fecha: "",
@@ -67,9 +66,6 @@ export default function RegistroMaterial() {
     e.preventDefault();
 
     let newErrors = {};
-    if (!registerMaterialForm.idIngreso) {
-      newErrors.idIngreso = "El ID de ingreso es requerido";
-    }
     if (!registerMaterialForm.idMaterial) {
       newErrors.idMaterial = "Selecciona un material válido";
     }
@@ -91,7 +87,6 @@ export default function RegistroMaterial() {
 
     // Enviar petición
     const newRegister = {
-      id_ingreso: registerMaterialForm.idIngreso,
       fecha: registerMaterialForm.fecha,
       material: registerMaterialForm.idMaterial,
       cantidad: registerMaterialForm.cantidad,
@@ -110,7 +105,6 @@ export default function RegistroMaterial() {
     
     // Limpiar formulario
     setRegisterMaterialForm({
-      idIngreso: 0,
       idMaterial: 0,
       cantidad: 0,
       fecha: "",
@@ -122,23 +116,6 @@ export default function RegistroMaterial() {
     <div className="registro-container w-100">
       <h1>Registro de Materiales</h1>
       <form onSubmit={onSubmitRegister} className="registro-form">
-        <label>
-          ID de Ingreso:
-          <input
-            type="number"
-            value={registerMaterialForm.idIngreso}
-            onChange={(e) =>
-              setRegisterMaterialForm({
-                ...registerMaterialForm,
-                idIngreso: parseInt(e.target.value) || 0,
-              })
-            }
-            placeholder="Ingrese el ID de ingreso"
-          />
-          {error.idIngreso && (
-            <span className="error-msg">{error.idIngreso}</span>
-          )}
-        </label>
         <label>
           Tipo de Material:
           <select
@@ -224,7 +201,6 @@ export default function RegistroMaterial() {
         <thead>
           <tr>
             <th>ID Registro</th>
-            <th>ID Ingreso</th>
             <th>Fecha</th>
             <th>Material</th>
             <th>Cantidad</th>
@@ -235,10 +211,8 @@ export default function RegistroMaterial() {
           {registers.map((reg) => (
             <tr key={reg.id_registro_material}>
               <td>{reg.id_registro_material}</td>
-              <td>{reg.id_ingreso}</td>
               <td>{reg.fecha}</td>
-              {/* <td>{reg.material}</td> */}
-              <td>{materiales.find((mat) => mat.id_insumo === reg.material)?.nombre || 'N/A'}</td>
+              <td>{reg.material_nombre}</td>
               <td>{reg.cantidad}</td>
               <td>{reg.origen}</td>
             </tr>

@@ -12,7 +12,7 @@ import { AuthPage } from "@components/auth/AuthPage";
 import Dashboard from "@components/Dashboard/Dashboard";
 import ConsultaInventario from "@components/ConsultaInventario/ConsultaInventario";
 import RegistroEcoladrillos from "@components/RegistroEcoladrillos/RegistroEcoladrillos";
-import RegistroSalidaEcoladrillos from "@components/RegistroEcoladrillos/RegistroSalidaEcoladrillos";
+import RetiroEcoladrillos from "@components/RegistroEcoladrillos/RetiroEcoladrillos";
 import HomePage from "@components/home/HomePage";
 import RegistroMaterial from "@components/RegistroMaterial/RegistroMaterial";
 // styles
@@ -41,7 +41,7 @@ export function AppRouter() {
             <Route index element={<Navigate to="ecobricks" replace />} />
             <Route path="ecobricks" element={<RegistroEcoladrillos />} />
             <Route path="material" element={<RegistroMaterial />} />
-            <Route path="output" element={<RegistroSalidaEcoladrillos />} />
+            <Route path="withdraw" element={<RetiroEcoladrillos />} />
           </Route>
         </Route>
         <Route

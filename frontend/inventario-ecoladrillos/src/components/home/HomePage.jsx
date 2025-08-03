@@ -110,7 +110,7 @@ const HomePage = () => {
                   <button onClick={() => navigate("/register/ecobricks")}>
                     Registrar Entrada
                   </button>
-                  <button onClick={() => navigate("/register/output")}>
+                  <button onClick={() => navigate("/register/withdraw")}>
                     Registrar Salida
                   </button>
                 </div>
