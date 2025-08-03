@@ -5,6 +5,7 @@ import { useConfirm } from "@hooks/useConfirm";
 // queries
 import { useGetEcoladrillos, useGetMaterials } from "@db/queries/Inventory";
 import { useEcobricksMutation } from "@db/queries/Ecoladrillos";
+import { useMaterialsMutation } from "@db/queries/Material";
 // styles
 import "./consultaInventario.scss";
 
@@ -21,6 +22,7 @@ export default function ConsultaInventario() {
 
   // --- MUTATIONS ---
   const ecobricksMutation = useEcobricksMutation();
+  const materialsMutation = useMaterialsMutation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,6 +53,14 @@ export default function ConsultaInventario() {
     }
   };
 
+  // Función para refrescar los materiales después de una operación
+  const refreshMateriales = async () => {
+    const updatedMateriales = await getMateriales();
+    if (!updatedMateriales.fetchErrorMsg) {
+      setMateriales(updatedMateriales.results || []);
+    }
+  };
+
   // Categoria de filtro
   const [categoria, setCategoria] = useState("Todos");
 
@@ -75,8 +85,13 @@ export default function ConsultaInventario() {
     material_principal: "",
     cantidad_material_requerida: "",
     cantidad: "",
+    // Campos para materiales
+    tipo: "",
+    cantidad_disponible: "",
+    unidad_medida: "",
   });
   const [isEditing, setIsEditing] = useState(false);
+  const [formType, setFormType] = useState(""); // "ecoladrillo" o "material"
 
   // Función para abrir modal para crear nuevo ecoladrillo
   const openCreateModal = () => {
@@ -88,9 +103,32 @@ export default function ConsultaInventario() {
       material_principal: "",
       cantidad_material_requerida: "",
       cantidad: "",
+      tipo: "",
+      cantidad_disponible: "",
+      unidad_medida: "",
     });
     setIsEditing(false);
+    setFormType("ecoladrillo");
     setModal("ecoladrillo-form");
+  };
+
+  // Función para abrir modal para crear nuevo material
+  const openCreateMaterialModal = () => {
+    setFormData({
+      id: null,
+      nombre: "",
+      descripcion: "",
+      size: "",
+      material_principal: "",
+      cantidad_material_requerida: "",
+      cantidad: "",
+      tipo: "",
+      cantidad_disponible: "",
+      unidad_medida: "",
+    });
+    setIsEditing(false);
+    setFormType("material");
+    setModal("material-form");
   };
 
   // Función para abrir modal para editar ecoladrillo
@@ -104,9 +142,32 @@ export default function ConsultaInventario() {
       cantidad_material_requerida:
         ecoladrillo.cantidad_material_requerida || "",
       cantidad: ecoladrillo.cantidad || "",
+      tipo: "",
+      cantidad_disponible: "",
+      unidad_medida: "",
     });
     setIsEditing(true);
+    setFormType("ecoladrillo");
     setModal("ecoladrillo-form");
+  };
+
+  // Función para abrir modal para editar material
+  const openEditMaterialModal = (material) => {
+    setFormData({
+      id: material.id_insumo,
+      nombre: material.nombre || "",
+      descripcion: "",
+      size: "",
+      material_principal: "",
+      cantidad_material_requerida: "",
+      cantidad: "",
+      tipo: material.tipo || "",
+      cantidad_disponible: material.cantidad_disponible || "",
+      unidad_medida: material.unidad_medida || "",
+    });
+    setIsEditing(true);
+    setFormType("material");
+    setModal("material-form");
   };
 
   // Función para manejar cambios en el formulario
@@ -115,7 +176,11 @@ export default function ConsultaInventario() {
     let processedValue = value;
 
     // Convertir a entero para campos numéricos
-    if (name === "cantidad" || name === "cantidad_material_requerida") {
+    if (
+      name === "cantidad" ||
+      name === "cantidad_material_requerida" ||
+      name === "cantidad_disponible"
+    ) {
       processedValue = value === "" ? "" : parseInt(value, 10) || 0;
     }
 
@@ -127,6 +192,15 @@ export default function ConsultaInventario() {
 
   // Función para guardar (crear o editar)
   const handleSave = async () => {
+    if (formType === "ecoladrillo") {
+      await handleSaveEcoladrillo();
+    } else if (formType === "material") {
+      await handleSaveMaterial();
+    }
+  };
+
+  // Función para guardar ecoladrillo
+  const handleSaveEcoladrillo = async () => {
     const dataToSend = {
       nombre: formData.nombre,
       descripcion: formData.descripcion,
@@ -136,7 +210,7 @@ export default function ConsultaInventario() {
         parseInt(formData.cantidad_material_requerida, 10) || 0,
       cantidad: parseInt(formData.cantidad, 10) || 0,
     };
-    console.log("Data to send:", dataToSend);
+
     let result = {};
     if (isEditing) {
       result = await ecobricksMutation.put(formData.id, dataToSend);
@@ -158,14 +232,53 @@ export default function ConsultaInventario() {
     await refreshEcoladrillos();
   };
 
+  // Función para guardar material
+  const handleSaveMaterial = async () => {
+    const dataToSend = {
+      nombre: formData.nombre,
+      tipo: formData.tipo,
+      cantidad_disponible: parseInt(formData.cantidad_disponible, 10) || 0,
+      unidad_medida: formData.unidad_medida,
+    };
+
+    let result = {};
+    if (isEditing) {
+      result = await materialsMutation.put(formData.id, dataToSend);
+    } else {
+      result = await materialsMutation.post(dataToSend);
+    }
+
+    if (result.errorMutationMsg) {
+      notify.error(result.errorMutationMsg);
+      return;
+    }
+
+    if (isEditing) {
+      notify.success("Material actualizado correctamente");
+    } else {
+      notify.success("Material creado correctamente");
+    }
+    setModal(null);
+    await refreshMateriales();
+  };
+
   // Función para eliminar
   const handleDelete = async () => {
+    if (formType === "ecoladrillo") {
+      await handleDeleteEcoladrillo();
+    } else if (formType === "material") {
+      await handleDeleteMaterial();
+    }
+  };
+
+  // Función para eliminar ecoladrillo
+  const handleDeleteEcoladrillo = async () => {
     confirm.deleteConfirm({
       message: `el ecoladrillo ${formData.nombre}`,
       onAccept: async () => {
         const result = await ecobricksMutation.del(formData.id);
         setModal(null);
-        
+
         if (result.errorMutationMsg) {
           notify.error(result.errorMutationMsg);
           return;
@@ -173,6 +286,25 @@ export default function ConsultaInventario() {
 
         notify.success("Ecoladrillo eliminado correctamente");
         await refreshEcoladrillos();
+      },
+    });
+  };
+
+  // Función para eliminar material
+  const handleDeleteMaterial = async () => {
+    confirm.deleteConfirm({
+      message: `el material ${formData.nombre}`,
+      onAccept: async () => {
+        const result = await materialsMutation.del(formData.id);
+        setModal(null);
+
+        if (result.errorMutationMsg) {
+          notify.error(result.errorMutationMsg);
+          return;
+        }
+
+        notify.success("Material eliminado correctamente");
+        await refreshMateriales();
       },
     });
   };
@@ -223,18 +355,24 @@ export default function ConsultaInventario() {
               quantity={material.cantidad_disponible}
               materialType={material.tipo}
               measureUnit={material.unidad_medida}
+              onClick={() => openEditMaterialModal(material)}
             />
           ))}
-        <div className="card flex --add-card">
+        <div className="card flex --add-card" onClick={openCreateMaterialModal}>
           <button className="btn-clean">+</button>
         </div>
       </div>
 
       {/* Formulario */}
-      {modal === "ecoladrillo-form" && (
+      {modal && (
         <Form
+          formType={formType}
           materiales={materiales}
-          ecobricksLoading={ecobricksMutation.loading}
+          loading={
+            formType === "ecoladrillo"
+              ? ecobricksMutation.loading
+              : materialsMutation.loading
+          }
           formData={formData}
           isEditing={isEditing}
           setModal={setModal}
@@ -308,8 +446,9 @@ function Card(props) {
 
 function Form(props) {
   const {
+    formType,
     materiales,
-    ecobricksLoading,
+    loading,
     formData,
     isEditing,
     setModal,
@@ -317,13 +456,25 @@ function Form(props) {
     handleSave,
     handleDelete,
   } = props;
+
+  const isEcoladrillo = formType === "ecoladrillo";
+  const isMaterial = formType === "material";
+
+  const title = isEcoladrillo
+    ? isEditing
+      ? "Editar Ecoladrillo"
+      : "Crear Nuevo Ecoladrillo"
+    : isEditing
+    ? "Editar Material"
+    : "Crear Nuevo Material";
+
   return (
     <div className="modal-bg" onClick={() => setModal(null)}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <button className="close" onClick={() => setModal(null)}>
           ×
         </button>
-        <h2>{isEditing ? "Editar Ecoladrillo" : "Crear Nuevo Ecoladrillo"}</h2>
+        <h2>{title}</h2>
 
         <div className="modal-content">
           <form className="ecoladrillo-form">
@@ -339,100 +490,155 @@ function Form(props) {
               />
             </div>
 
-            <div className="form-group">
-              <label htmlFor="descripcion">Descripción:</label>
-              <textarea
-                id="descripcion"
-                name="descripcion"
-                value={formData.descripcion}
-                onChange={handleInputChange}
-                rows="3"
-              />
-            </div>
+            {isEcoladrillo && (
+              <>
+                <div className="form-group">
+                  <label htmlFor="descripcion">Descripción:</label>
+                  <textarea
+                    id="descripcion"
+                    name="descripcion"
+                    value={formData.descripcion}
+                    onChange={handleInputChange}
+                    rows="3"
+                  />
+                </div>
 
-            <div className="form-group">
-              <label htmlFor="size">Tamaño:</label>
-              <select
-                name="size"
-                id="size"
-                value={formData.size}
-                onChange={handleInputChange}
-              >
-                <option value="">Selecciona un tamaño</option>
-                <option value="small">Pequeño</option>
-                <option value="medium">Mediano</option>
-                <option value="large">Grande</option>
-              </select>
-            </div>
+                <div className="form-group">
+                  <label htmlFor="size">Tamaño:</label>
+                  <select
+                    name="size"
+                    id="size"
+                    value={formData.size}
+                    onChange={handleInputChange}
+                  >
+                    <option value="">Selecciona un tamaño</option>
+                    <option value="small">Pequeño</option>
+                    <option value="medium">Mediano</option>
+                    <option value="large">Grande</option>
+                  </select>
+                </div>
 
-            <div className="form-group">
-              <label htmlFor="material_principal">Material Principal:</label>
-              <select
-                id="material_principal"
-                name="material_principal"
-                value={formData.material_principal}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Selecciona un material</option>
-                {materiales.map((material) => (
-                  <option key={material.id_insumo} value={material.id_insumo}>
-                    {material.nombre}
-                  </option>
-                ))}
-              </select>
-            </div>
+                <div className="form-group">
+                  <label htmlFor="material_principal">
+                    Material Principal:
+                  </label>
+                  <select
+                    id="material_principal"
+                    name="material_principal"
+                    value={formData.material_principal}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">Selecciona un material</option>
+                    {materiales.map((material) => (
+                      <option
+                        key={material.id_insumo}
+                        value={material.id_insumo}
+                      >
+                        {material.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-            <div className="form-group">
-              <label htmlFor="cantidad_material_requerida">
-                Cantidad Material Requerida:
-              </label>
-              <input
-                type="number"
-                id="cantidad_material_requerida"
-                name="cantidad_material_requerida"
-                value={formData.cantidad_material_requerida}
-                onChange={handleInputChange}
-                min="0"
-                step="1"
-              />
-            </div>
+                <div className="form-group">
+                  <label htmlFor="cantidad_material_requerida">
+                    Cantidad Material Requerida:
+                  </label>
+                  <input
+                    type="number"
+                    id="cantidad_material_requerida"
+                    name="cantidad_material_requerida"
+                    value={formData.cantidad_material_requerida}
+                    onChange={handleInputChange}
+                    min="0"
+                    step="1"
+                  />
+                </div>
 
-            <div className="form-group">
-              <label htmlFor="cantidad">Cantidad (Stock inicial):</label>
-              <input
-                type="number"
-                id="cantidad"
-                name="cantidad"
-                value={formData.cantidad}
-                onChange={handleInputChange}
-                min="0"
-                step="1"
-                required
-              />
-            </div>
+                <div className="form-group">
+                  <label htmlFor="cantidad">Cantidad (Stock inicial):</label>
+                  <input
+                    type="number"
+                    id="cantidad"
+                    name="cantidad"
+                    value={formData.cantidad}
+                    onChange={handleInputChange}
+                    min="0"
+                    step="1"
+                    required
+                  />
+                </div>
+              </>
+            )}
+
+            {isMaterial && (
+              <>
+                <div className="form-group">
+                  <label htmlFor="tipo">Tipo:</label>
+                  <input
+                    type="text"
+                    id="tipo"
+                    name="tipo"
+                    value={formData.tipo}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="cantidad_disponible">
+                    Cantidad Disponible:
+                  </label>
+                  <input
+                    type="number"
+                    id="cantidad_disponible"
+                    name="cantidad_disponible"
+                    value={formData.cantidad_disponible}
+                    onChange={handleInputChange}
+                    min="0"
+                    step="1"
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="unidad_medida">Unidad de Medida:</label>
+                  <select
+                    id="unidad_medida"
+                    name="unidad_medida"
+                    value={formData.unidad_medida}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">Selecciona una unidad</option>
+                    <option value="u">Unidades (u)</option>
+                    <option value="kg">Kilogramos (kg)</option>
+                    <option value="g">Gramos (g)</option>
+                    <option value="m">Metros (m)</option>
+                    <option value="cm">Centímetros (cm)</option>
+                  </select>
+                </div>
+              </>
+            )}
 
             <div className="form-actions">
               <button
                 type="button"
                 className="btn btn-primary"
                 onClick={handleSave}
-                disabled={ecobricksLoading}
+                disabled={loading}
               >
-                {ecobricksLoading
-                  ? "Guardando..."
-                  : isEditing
-                  ? "Actualizar"
-                  : "Crear"}
+                {loading ? "Guardando..." : isEditing ? "Actualizar" : "Crear"}
               </button>
               {isEditing && (
                 <button
                   type="button"
                   className="btn btn-danger"
                   onClick={handleDelete}
-                  disabled={ecobricksLoading}
+                  disabled={loading}
                 >
-                  {ecobricksLoading ? "Eliminando..." : "Eliminar"}
+                  {loading ? "Eliminando..." : "Eliminar"}
                 </button>
               )}
               <button
