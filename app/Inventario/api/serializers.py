@@ -53,10 +53,15 @@ class RegistroMaterialSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = RegistroMaterial
-        fields = ['id_registro_material', 'id_ingreso', 'fecha', 'cantidad', 
+        fields = ['id_registro_material', 'fecha', 'cantidad', 
                  'material', 'material_nombre', 'origen']
 
 class ReporteSerializer(serializers.ModelSerializer):
+    operario_nombre = serializers.CharField(source='operario.nombre', read_only=True)
+    tipo_reporte_display = serializers.CharField(source='get_tipo_reporte_display', read_only=True)
+    
     class Meta:
         model = Reporte
-        fields = ['id_reporte', 'fecha_generacion', 'fecha_inicio', 'fecha_fin']
+        fields = ['id_reporte', 'tipo_reporte', 'tipo_reporte_display', 'fecha_generacion', 
+                 'operario', 'operario_nombre', 'fecha_consulta', 'fecha_inicio', 'fecha_fin', 'datos_reporte']
+        read_only_fields = ['fecha_generacion']
