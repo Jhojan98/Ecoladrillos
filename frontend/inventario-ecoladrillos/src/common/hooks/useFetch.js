@@ -73,7 +73,7 @@ export const useFetch = (
         }
         return result;
       } catch (err) {
-        setError("Ha ocurrido un error"); // usuario
+        setError(errorMessage); // usuario
         console.error(`${errorMessage}: ${err.message}`); // desarrollador
         return { fetchErrorMsg: errorMessage, errorJsonMsg: err.message }; // para el codigo
       } finally {

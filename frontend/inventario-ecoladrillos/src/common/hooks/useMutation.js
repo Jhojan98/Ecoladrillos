@@ -59,7 +59,7 @@ export const useMutation = () => {
       }
       return result;
     } catch (err) {
-      setError("Ha ocurrido un error"); // usuario
+      setError(errorMessage); // usuario
       console.error(`${errorMessage}: ${err.message}`); // desarrollador
       return {
         errorMutationMsg: errorMessage, // para el codigo

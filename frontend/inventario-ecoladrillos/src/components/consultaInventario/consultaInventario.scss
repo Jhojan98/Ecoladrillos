@@ -207,77 +207,217 @@
     }
   }
 
-  // // Modal
-  // .modal-bg {
-  //   position: fixed;
-  //   top: 0;
-  //   left: 0;
-  //   right: 0;
-  //   bottom: 0;
-  //   background: rgba(0, 0, 0, 0.55);
-  //   display: flex;
-  //   justify-content: center;
-  //   align-items: center;
-  //   animation: fadeIn 0.3s ease;
-  //   z-index: 50;
-  // }
+  // Modal
+  .modal-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+    z-index: 50;
+  }
 
-  // .modal {
-  //   background: $white;
-  //   border-radius: 1.2rem;
-  //   padding: 2rem;
-  //   width: 90%;
-  //   max-width: 500px;
-  //   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  //   position: relative;
-  //   animation: slideIn 0.4s ease;
+  .modal {
+    background: $white;
+    border-radius: 1.2rem;
+    padding: 1.5rem 1rem;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: slideIn 0.4s ease;
+    display: flex;
+    flex-direction: column;
 
-  //   h2 {
-  //     font-size: 1.5rem;
-  //     margin-bottom: 1rem;
-  //     color: $green-1;
-  //   }
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: $green-1;
+      text-align: center;
+      flex-shrink: 0;
+    }
 
-  //   .detalle {
-  //     p {
-  //       margin-bottom: 0.6rem;
-  //       font-size: 1rem;
-  //       strong {
-  //         color: $gray-4;
-  //       }
-  //     }
-  //   }
+    .modal-content {
+      overflow-y: auto;
+      flex: 1;
+      padding: 0 1rem;
 
-  //   .close {
-  //     position: absolute;
-  //     top: 1rem;
-  //     right: 1rem;
-  //     background: transparent;
-  //     border: none;
-  //     font-size: 1.8rem;
-  //     cursor: pointer;
-  //     color: $gray-4;
-  //   }
-  // }
+      /* Estilos personalizados para el scrollbar */
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: lighten($green-1, 20%);
+        border-radius: 3px;
+
+        &:hover {
+          background: $green-1;
+        }
+      }
+    }
+
+    .close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: transparent;
+      border: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: $gray-4;
+      transition: color 0.3s;
+      z-index: 10;
+
+      &:hover {
+        color: $red-1;
+      }
+    }
+  }
 }
 
-// // Animaciones
-// @keyframes fadeIn {
-//   from {
-//     opacity: 0;
-//   }
-//   to {
-//     opacity: 1;
-//   }
-// }
+// Animaciones
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 
-// @keyframes slideIn {
-//   from {
-//     transform: translateY(30px);
-//     opacity: 0;
-//   }
-//   to {
-//     transform: translateY(0);
-//     opacity: 1;
-//   }
-// }
+@keyframes slideIn {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// Form styles dentro del modal
+.ecoladrillo-form {
+  .form-group {
+    margin-bottom: 1.2rem;
+
+    label {
+      display: block;
+      margin-bottom: 0.6rem;
+      font-weight: 600;
+      color: $green-1;
+      font-size: 0.95rem;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: 0.8rem;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background-color: $white;
+
+      &:focus {
+        outline: none;
+        border-color: $green-1;
+        box-shadow: 0 0 0 3px rgba($green-1, 0.1);
+        transform: translateY(-1px);
+      }
+
+      &::placeholder {
+        color: #999;
+      }
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+      font-family: inherit;
+    }
+
+    select {
+      cursor: pointer;
+      
+      &:hover {
+        border-color: $green-1;
+      }
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+
+    .btn {
+      padding: 0.8rem 1.8rem;
+      border: none;
+      border-radius: 0.8rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 120px;
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      &.btn-primary {
+        background-color: $green-1;
+        color: white;
+
+        &:hover:not(:disabled) {
+          background-color: darken($green-1, 10%);
+        }
+      }
+
+      &.btn-danger {
+        background-color: $red-1;
+        color: white;
+
+        &:hover:not(:disabled) {
+          background-color: darken($red-1, 10%);
+        }
+      }
+
+      &.btn-secondary {
+        background-color: $gray-4;
+        color: white;
+
+        &:hover:not(:disabled) {
+          background-color: darken($gray-4, 10%);
+        }
+      }
+    }
+  }
+}
+
+// Add card hover effects (ya está integrado en las clases de arriba)
+.--add-card {
+  &:hover {
+    transform: translateY(-5px);
+  }
+}
