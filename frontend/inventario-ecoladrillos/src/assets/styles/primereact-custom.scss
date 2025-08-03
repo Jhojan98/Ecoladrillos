@@ -1,0 +1,179 @@
+@use "variables" as *;
+
+/* Estilos personalizados para PrimeReact ConfirmDialog */
+
+/* Overlay del dialog */
+.p-dialog-mask {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  // font-family: "Segoe UI", Helvetica, Roboto Arial, sans-serif !important;
+
+  /* Dialog principal */
+  .p-dialog {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    border-radius: 12px !important;
+    border: none !important;
+  }
+
+  /* Header del dialog */
+  .p-dialog-header {
+    background: #ffffff !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    border-radius: 12px 12px 0 0 !important;
+    padding: 1.5rem !important;
+    font-family: "Segoe UI", Helvetica, Roboto Arial, sans-serif !important;
+    .p-dialog-title {
+      font-weight: 600 !important;
+      font-size: 1.2rem !important;
+      color: #1f2937 !important;
+      line-height: 1 !important;
+    }
+    .p-dialog-header-icons {
+      align-self: center !important;
+      // box-shadow: none !important;
+      outline: none !important;
+      button:focus {
+        box-shadow: 0 0 0 2px $blue-2 !important;
+      }
+    }
+  }
+
+  /* Contenido del dialog */
+  .p-dialog-content {
+    background: #ffffff !important;
+    padding: 1.5rem !important;
+    color: #374151 !important;
+    display: flex !important;
+    gap: 1rem !important;
+    font-family: "Segoe UI", Helvetica, Roboto Arial, sans-serif !important;
+  }
+
+  /* Footer del dialog */
+  .p-dialog-footer {
+    background: #ffffff !important;
+    border-top: 1px solid #e5e7eb !important;
+    border-radius: 0 0 12px 12px !important;
+    padding: 1rem 1.5rem !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    gap: 0.75rem !important;
+  }
+
+  /* Botones del dialog */
+  .p-dialog-footer .p-button {
+    font-weight: 500 !important;
+    padding: 0.625rem 1.25rem !important;
+    border-radius: 8px !important;
+    border: none !important;
+    font-size: 0.875rem !important;
+    transition: all 0.2s ease !important;
+    &:focus {
+      box-shadow: 0 0 0 2px $blue-2 !important;
+    }
+  }
+
+  .p-dialog-footer .p-button-info {
+    background-color: $primary-color !important;
+    color: white !important;
+  }
+
+  .p-dialog-footer .p-button-info:hover {
+    background-color: $primary-color-darken !important;
+    transform: translateY(-1px) !important;
+  }
+
+  /* Botón de aceptar (peligroso) */
+  .p-dialog-footer .p-button-danger {
+    background-color: #dc2626 !important;
+    color: white !important;
+  }
+
+  .p-dialog-footer .p-button-danger:hover {
+    background-color: #b91c1c !important;
+    transform: translateY(-1px) !important;
+  }
+
+  /* Botón de advertencia */
+  .p-dialog-footer .p-button-warning {
+    background-color: #d97706 !important;
+    color: white !important;
+  }
+
+  .p-dialog-footer .p-button-warning:hover {
+    background-color: #b45309 !important;
+    transform: translateY(-1px) !important;
+  }
+
+  /* Botón de rechazar (texto) */
+  .p-dialog-footer .p-button-text {
+    background-color: transparent !important;
+    color: #6b7280 !important;
+    border: 1px solid #d1d5db !important;
+  }
+
+  .p-dialog-footer .p-button-text:hover {
+    background-color: #f9fafb !important;
+    color: #374151 !important;
+    border-color: #9ca3af !important;
+    transform: translateY(-1px) !important;
+  }
+
+  /* Icono del mensaje */
+  .p-confirm-dialog-message {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 1rem !important;
+  }
+
+  .p-confirm-dialog-icon {
+    //   color: #5075db !important;
+    color: $blue-2 !important;
+    font-size: 1.5rem !important;
+    margin-top: 0.125rem !important;
+  }
+
+  .p-confirm-dialog-icon.pi-trash {
+    color: #dc2626 !important;
+  }
+
+  .p-confirm-dialog-icon.pi-exclamation-triangle {
+    color: #d97706 !important;
+  }
+
+  .p-confirm-dialog-icon.pi-save {
+    color: #5ad356 !important;
+  }
+
+  /* Responsivo */
+  @media (max-width: 768px) {
+    .p-dialog {
+      width: 90vw !important;
+      margin: 0 !important;
+    }
+
+    .p-dialog-footer {
+      flex-direction: column !important;
+    }
+
+    .p-dialog-footer .p-button {
+      width: 100% !important;
+    }
+  }
+}
+
+// Estilos para el InputSwitch de PrimeReact
+.p-inputswitch {
+  width: 40px;
+  height: 22px;
+  .p-inputswitch-slider {
+    &::before {
+      top: 57%;
+      left: 2px;
+      width: 16px !important;
+      height: 16px !important;
+    }
+  }
+  input:checked + .p-inputswitch-slider {
+    background-color: $primary-color !important;
+  }
+}

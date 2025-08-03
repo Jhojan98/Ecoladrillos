@@ -1,0 +1,144 @@
+@use "../../assets/styles/variables" as *;
+
+.auth-page {
+  min-height: calc(100vh - 55px);
+
+  .auth-form {
+    max-width: 350px;
+    width: 100%;
+    margin: 10px;
+    padding: 30px 40px;
+    background-color: rgba(228, 240, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border-radius: 10px;
+    text-align: center;
+    gap: 20px;
+    .title-auth {
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+    .form__field {
+      width: 100%;
+      text-align: left;
+      span {
+        display: inline-block;
+        margin-bottom: 5px;
+      }
+      .inp {
+        width: 100%;
+        border-radius: 999px;
+      }
+    }
+    .forgot-pass-txt,
+    .signin-txt {
+      margin-top: 5px;
+      font-size: 0.8rem;
+      color: #333;
+    }
+    .link {
+      color: $primary-color;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    // eyes password
+    .password-input-container {
+      .inp {
+        padding-right: 40px;
+      }
+      .password-eye-btn {
+        top: 51%;
+        right: 12px;
+        display: flex;
+        img {
+          width: 20px;
+          height: 20px;
+          opacity: 0.6;
+          transition: opacity 0.2s ease;
+          &:hover {
+            opacity: 1;
+          }
+        }
+      }
+    }
+    hr {
+      width: 100%;
+      height: 1px;
+      border: none;
+      background-color: rgba(41, 41, 41, 0.5);
+    }
+    .hr-login {
+      hr {
+        margin: 0px 5px;
+      }
+      span {
+        font-size: 0.9rem;
+        line-height: 1;
+      }
+    }
+    .microsoft-opt-text {
+      color: $gray-6;
+    }
+    .btn-primary {
+      width: 100%;
+      .microsoft-icon {
+        width: w0px;
+        height: 20px;
+        margin-right: 10px;
+      }
+    }
+  }
+
+  /* signin */
+  .signin-form {
+    max-width: initial;
+    .signin-row {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: 10px;
+      .signin-col {
+        flex-grow: 1;
+      }
+    }
+  }
+
+  /* complete profile */
+  .edit-form {
+    .edit-form__avatar {
+      overflow: hidden;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-color: $gray-2;
+      border: 3px solid $gray-2;
+      .user-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .camera-icon-container {
+        width: 100%;
+        height: 25px;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        .camera-icon {
+          width: 20px;
+          height: 20px;
+          fill: $gray-1;
+          transition: all 0.2s ease;
+        }
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.5);
+          .camera-icon {
+            fill: $white;
+          }
+        }
+      }
+      input[type="file"] {
+        display: none;
+      }
+    }
+  }
+}

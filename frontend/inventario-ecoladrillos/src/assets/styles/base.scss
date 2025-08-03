@@ -1,0 +1,24 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: "Segoe UI", Helvetica, Roboto Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-size: 15px;
+}
+
+.bg-img {
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}

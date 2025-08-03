@@ -1,0 +1,178 @@
+@use "variables" as *;
+
+/* Flex */
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.align-start {
+  align-items: flex-start;
+}
+
+.wrap {
+  flex-wrap: wrap;
+}
+
+.gap-10 {
+  gap: 10px;
+}
+
+/* Position  */
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.display-none {
+  display: none;
+}
+
+/* Dimension */
+.w-100 {
+  width: 100%;
+}
+
+/* altura 100vh - 55px  */
+.min-height-page {
+  height: calc(100vh - 55px);
+}
+
+/* Button - input */
+.btn-clean {
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+.btn-primary {
+  border: none;
+  cursor: pointer;
+  background-color: $primary-color;
+  color: $white;
+  padding: 10px;
+  &:hover {
+    background-color: $primary-color-darken;
+  }
+}
+
+.btn-secondary {
+  border: none;
+  cursor: pointer;
+  background-color: $gray-1;
+  padding: 10px;
+  &:hover {
+    background-color: $gray-2;
+  }
+}
+
+.inp {
+  padding: 10px 15px;
+  border: none;
+  &:focus {
+    outline: 1px solid $primary-color;
+  }
+}
+
+/* Text */
+.title-section {
+  display: inline-block;
+  color: $gray-4;
+  font-size: 1.1rem;
+}
+
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.info-msg-container {
+  gap: 3px;
+  .info-icon {
+    width: 14px;
+    height: 14px;
+    opacity: 0.5;
+  }
+  .info-msg {
+    font-size: 0.85rem;
+    color: $gray-4;
+    line-height: 1.2;
+  }
+}
+
+/* Others */
+.link {
+  text-decoration: none;
+  color: black;
+}
+
+.circular-radius {
+  border-radius: 100px;
+}
+
+.box-shadow {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  padding: 4px;
+  background-color: #f7f7f7;
+}
+
+.error-inp-message {
+  display: block;
+  color: red;
+  font-size: 0.8rem;
+  text-align: right;
+  margin-right: 10px;
+  align-self: flex-end;
+}
+
+// Loading spinner
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid $white;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s ease-out infinite;
+  &.spinner-gray {
+    border: 2px solid $gray-4;
+    border-top-color: transparent;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
