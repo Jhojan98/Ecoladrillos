@@ -7,8 +7,6 @@ import {
   useGetRetirosEcobricks,
   useRetiroEcoladrillosMutation,
 } from "@db/queries/Ecoladrillos";
-// styles
-import "./registroEcoladrillos.scss";
 
 export default function RetiroEcoladrillos() {
   const notify = useNotifier();

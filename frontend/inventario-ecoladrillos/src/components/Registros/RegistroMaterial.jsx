@@ -7,8 +7,6 @@ import {
   useGetRegistersMaterials,
   useRegisterMaterialMutation,
 } from "@db/queries/Material";
-// styles
-import "./registroMaterial.scss";
 
 export default function RegistroMaterial() {
   const notify = useNotifier();

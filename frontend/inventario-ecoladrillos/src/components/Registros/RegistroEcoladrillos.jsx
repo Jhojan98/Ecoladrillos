@@ -8,7 +8,7 @@ import {
   useRegisterEcobricksMutation,
 } from "@db/queries/Ecoladrillos";
 // styles
-import "./registroEcoladrillos.scss";
+import "./registros.scss";
 
 export default function RegistroEcoladrillos() {
   const notify = useNotifier();
