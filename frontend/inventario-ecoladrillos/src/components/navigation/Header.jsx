@@ -71,7 +71,7 @@ export function Header(props) {
             className="btn-bars btn-primary"
             ref={barsRef}
             onClick={() => handleBarsClicked()}
-          >a
+          >
             <img className="header-bars" src={barsIcon} alt="bars icon" />
           </button>
         )}
@@ -89,7 +89,7 @@ export function Header(props) {
           <HomeIcon className="home-icon" alt="home icon" />
           <span>Home</span>
         </Link>
-        <Link className="link--home link flex align-center" to="/dashboard">
+        <Link className="link flex align-center" to="/dashboard">
           {/* <HomeIcon className="home-icon" alt="home icon" /> */}
           <span>Dashboard</span>
         </Link>

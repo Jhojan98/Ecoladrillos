@@ -2,13 +2,13 @@
 
 .consulta-inventario {
   padding: 1.5rem;
+  max-width: 1500px;
 
   // Header
   .inventory-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
 
     h1 {
       font-size: 2rem;
@@ -30,6 +30,14 @@
         border-color: $primary-color;
       }
     }
+  }
+
+  .subheader {
+    font-size: 1.7rem;
+    font-weight: bold;
+    color: $green-1;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
   }
 
   // Subheader
@@ -65,22 +73,6 @@
         box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
       }
 
-      .card-type {
-        width: fit-content;
-        padding: 0.1rem 0.5rem;
-        border-radius: 999px;
-        font-size: 0.8rem;
-        font-weight: 700;
-        &.--Ecoladrillo-card {
-          color: $red-1;
-          background-color: $red-1-lighten;
-        }
-        &.--Material-card {
-          color: $blue-1;
-          background-color: $blue-1-lighten;
-        }
-      }
-
       .card-header {
         font-size: 2rem;
         font-weight: 500;
@@ -88,35 +80,128 @@
         align-items: center;
         gap: 0.5rem;
         line-height: 1;
+
         .id-card {
           margin-top: 0.2rem;
           line-height: 1;
           font-size: 0.8rem;
-          color: $gray-4;
-          background-color: $gray-0;
-          padding: 0.1rem 0.5rem;
+          padding: 0.1rem 0.4rem;
           border-radius: 999px;
-          border: 1px solid $gray-4;
         }
         h3 {
           font-size: 1.5rem;
-          color: $green-1;
+          color: $green-2;
           font-weight: 500;
         }
       }
-      .description-card {
-        font-size: 0.9rem;
-        color: $gray-5;
-        line-height: 1;
+
+      .units-card-container {
+        text-align: center;
+
+        .units-number-container {
+          background-color: $orange-1-lighten;
+          color: $orange-2;
+          padding: 0.2rem 0.5rem;
+          border-radius: 999px;
+          border: 1px solid $orange-2;
+          width: fit-content;
+          margin: 0 auto;
+
+          .units-number {
+            font-size: 1.5rem;
+            line-height: 1;
+            font-weight: 600;
+          }
+        }
+        .units-text {
+          font-size: 0.9rem;
+          color: $orange-2;
+          margin-top: 5px;
+          line-height: 1;
+        }
       }
-      .secondary-text-card {
-        font-size: 1.1rem;
-        font-weight: bold;
-        color: rgb(255, 200, 98)
-      }
-      .card-details{
+      .card-details {
+        .description-card {
+          color: $gray-4;
+          font-size: 0.9rem;
+        }
         b {
           font-weight: 500;
+        }
+      }
+
+      // tema rojo
+      &.--Ecoladrillo-card {
+        border-left: 3px solid $red-2;
+        box-shadow: 5px 5px 10px rgba(229, 57, 53, 0.1);
+        &:hover {
+          box-shadow: 5px 10px 15px rgba(229, 57, 53, 0.15);
+        }
+        .card-header {
+          .id-card {
+            color: $red-2;
+            background-color: $red-1-lighten;
+            border: 1px solid $red-2;
+          }
+          h3 {
+            color: $red-2;
+          }
+          color: $red-1-darken;
+        }
+      }
+
+      // tema azul
+      &.--Material-card {
+        border-left: 3px solid $blue-2;
+        box-shadow: 5px 5px 10px rgba(62, 110, 199, 0.1);
+        &:hover {
+          box-shadow: 5px 10px 15px rgba(62, 110, 199, 0.15);
+        }
+        .card-header {
+          .id-card {
+            color: $blue-2;
+            background-color: $blue-1-lighten;
+            border: 1px solid $blue-2;
+          }
+          h3 {
+            color: $blue-2;
+          }
+        }
+      }
+      // agregar card
+      &.--add-card {
+        background: $blue-1-lighten;
+        border: 1px dashed $blue-1;
+        color: $blue-1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        order: 9999999; // para que aparezca al final
+        box-shadow: 0 5px 10px rgba(62, 110, 199, 0.1);
+
+        &:hover {
+          box-shadow: 0 10px 15px rgba(62, 110, 199, 0.15);
+        }
+
+        .btn-clean {
+          background: transparent;
+          border: none;
+          font-size: 2.5rem;
+          line-height: 1;
+          color: $blue-1;
+          transition: color 0.3s;
+        }
+        &.--add-card-eco {
+          background: $red-1-lighten;
+          border: 1px dashed $red-1;
+          box-shadow: 0 5px 10px rgba(229, 57, 53, 0.1);
+          &:hover {
+            box-shadow: 0 10px 15px rgba(229, 57, 53, 0.15);
+          }
+          .btn-clean {
+            color: $red-1;
+          }
         }
       }
     }

@@ -36,7 +36,7 @@ export default function ConsultaInventario() {
 
     fetchData();
   }, []);
-  
+
   // Categoria de filtro
   const [categoria, setCategoria] = useState("Todos");
 
@@ -70,12 +70,13 @@ export default function ConsultaInventario() {
       </header>
 
       {/* Barra inferior */}
-      <div className="total-inventory">
+      {/* <div className="total-inventory">
         <span>
           Total Ecoladrillos: {totalEcoladrillos} | Total Materiales:{" "}
           {totalMateriales}
         </span>
-      </div>
+      </div> */}
+      <h2 className="subheader">Ecoladrillos</h2>
 
       {/* Grid de inventario */}
       <div className="inventory-cards">
@@ -93,6 +94,15 @@ export default function ConsultaInventario() {
               requiredMaterialEco={ecoladrillo.cantidad_material_requerida || 0}
             />
           ))}
+        {/* carta para agregar nuevo */}
+        <div className="card flex --add-card --add-card-eco">
+          <button className="btn-clean">+</button>
+        </div>
+      </div>
+
+      <h2 className="subheader">Materiales</h2>
+
+      <div className="inventory-cards">
         {(categoria === "Materiales" || categoria === "Todos") &&
           materiales.map((material) => (
             <Card
@@ -105,8 +115,11 @@ export default function ConsultaInventario() {
               measureUnit={material.unidad_medida}
             />
           ))}
+        {/* carta para agregar nuevo */}
+        <div className="card flex --add-card">
+          <button className="btn-clean">+</button>
+        </div>
       </div>
-
       {/* Modal detalle */}
       {/* {modal && (
         <div className="modal-bg" onClick={() => setModal(null)}>
@@ -156,20 +169,25 @@ function Card(props) {
     measureUnit,
   } = props;
   return (
-    <div className="card flex gap-10 flex-column">
-      <span className={`card-type --${cartType}-card`}>{cartType}</span>
-
+    <div className={`card flex gap-10 flex-column --${cartType}-card`}>
       <div className="card-header">
         <span className="id-card">{id}</span>
         <h3>{name || "Ecoladrillo"}</h3>
       </div>
 
-      {description && <p className="description-card">{description}</p>}
+      <div className="units-card-container">
+        <div className="units-number-container">
+          <span className="units-number">
+            {quantity} {measureUnit || "u"}
+          </span>
+        </div>
+        <p className="units-text">
+          {cartType === "Material" ? "disponibles" : "producidas"}
+        </p>
+      </div>
 
       <div className="card-details">
-        <p className="secondary-text-card">
-          {quantity} {measureUnit || "unidades"} {cartType === "Material" ? "disponibles" : "producidos"}
-        </p>
+        {description && <p className="description-card">{description}</p>}
 
         {sizeEco && (
           <p>
