@@ -56,8 +56,8 @@ export default function ConsultaInventario() {
     <div className="consulta-inventario w-100">
       {/* Header */}
       <header className="inventory-header">
-        <h1>📦 Inventario General</h1>
-        <div className="select-wrapper">
+        <h1>Inventario General</h1>
+        {/* <div className="select-wrapper">
           <select
             value={categoria}
             onChange={(e) => setCategoria(e.target.value)}
@@ -66,7 +66,7 @@ export default function ConsultaInventario() {
             <option value="Ecoladrillos">Ecoladrillos</option>
             <option value="Materiales">Materiales</option>
           </select>
-        </div>
+        </div> */}
       </header>
 
       {/* Barra inferior */}

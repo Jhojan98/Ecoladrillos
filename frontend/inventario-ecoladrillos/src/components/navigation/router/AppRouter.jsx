@@ -32,7 +32,7 @@ export function AppRouter() {
         <Route path="/login" element={<AuthPage AuthElement={Login} />} />
 
         <Route path="/" element={<BasePage />}>
-          <Route index element={<Navigate to="/dashboard" replace />} />
+          <Route index element={<Navigate to="/home" replace />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/inventory" element={<ConsultaInventario />} />
