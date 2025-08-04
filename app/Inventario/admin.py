@@ -1,7 +1,8 @@
 from django.contrib import admin
 from .models import (
     Operario, Administrador, Ecoladrillo, Material, 
-    RegistroEcoladrillo, RetiroEcoladrillo, RegistroMaterial, Reporte
+    RegistroEcoladrillo, RetiroEcoladrillo, RegistroMaterial, Reporte,
+    ReporteStockFecha, ReporteResumenInventario, ReporteResumenRetiros
 )
 
 @admin.register(Operario)
@@ -58,30 +59,17 @@ class RegistroMaterialAdmin(admin.ModelAdmin):
 
 @admin.register(Reporte)
 class ReporteAdmin(admin.ModelAdmin):
-    list_display = ('id_reporte', 'tipo_reporte', 'fecha_generacion', 'operario', 'fecha_consulta', 'get_periodo')
+    list_display = ('id_reporte', 'tipo_reporte', 'fecha_generacion', 'operario')
     search_fields = ('tipo_reporte', 'operario__nombre')
     list_filter = ('tipo_reporte', 'fecha_generacion', 'operario')
     date_hierarchy = 'fecha_generacion'
     ordering = ('-fecha_generacion',)
     readonly_fields = ('fecha_generacion',)
     
-    def get_periodo(self, obj):
-        """Muestra el período para reportes que lo tienen"""
-        if obj.fecha_inicio and obj.fecha_fin:
-            return f"{obj.fecha_inicio} - {obj.fecha_fin}"
-        elif obj.fecha_consulta:
-            return f"Fecha: {obj.fecha_consulta}"
-        return "-"
-    get_periodo.short_description = 'Período/Fecha'
-    
     # Organizar los campos en el formulario
     fieldsets = (
         ('Información General', {
             'fields': ('tipo_reporte', 'operario', 'fecha_generacion')
-        }),
-        ('Fechas', {
-            'fields': ('fecha_consulta', 'fecha_inicio', 'fecha_fin'),
-            'description': 'Para reportes de stock usar fecha_consulta. Para reportes de período usar fecha_inicio y fecha_fin.'
         }),
         ('Datos del Reporte', {
             'fields': ('datos_reporte',),
@@ -94,6 +82,79 @@ class ReporteAdmin(admin.ModelAdmin):
         'tipo_reporte',
         ('fecha_generacion', admin.DateFieldListFilter),
         'operario',
+    )
+
+@admin.register(ReporteStockFecha)
+class ReporteStockFechaAdmin(admin.ModelAdmin):
+    list_display = ('id_reporte', 'tipo_reporte', 'fecha_generacion', 'operario', 'fecha_consulta')
+    search_fields = ('operario__nombre',)
+    list_filter = ('fecha_generacion', 'fecha_consulta', 'operario')
+    date_hierarchy = 'fecha_generacion'
+    ordering = ('-fecha_generacion',)
+    readonly_fields = ('fecha_generacion',)
+    
+    fieldsets = (
+        ('Información General', {
+            'fields': ('tipo_reporte', 'operario', 'fecha_generacion')
+        }),
+        ('Fecha de Consulta', {
+            'fields': ('fecha_consulta',),
+            'description': 'Fecha para la cual se consulta el stock de ecoladrillos y materiales.'
+        }),
+        ('Datos del Reporte', {
+            'fields': ('datos_reporte',),
+            'classes': ('collapse',),
+        }),
+    )
+
+@admin.register(ReporteResumenInventario)
+class ReporteResumenInventarioAdmin(admin.ModelAdmin):
+    list_display = ('id_reporte', 'tipo_reporte', 'fecha_generacion', 'operario')
+    search_fields = ('operario__nombre',)
+    list_filter = ('fecha_generacion', 'operario')
+    date_hierarchy = 'fecha_generacion'
+    ordering = ('-fecha_generacion',)
+    readonly_fields = ('fecha_generacion',)
+    
+    fieldsets = (
+        ('Información General', {
+            'fields': ('tipo_reporte', 'operario', 'fecha_generacion')
+        }),
+        ('Datos del Reporte', {
+            'fields': ('datos_reporte',),
+            'classes': ('collapse',),
+            'description': 'Contiene el resumen de ecoladrillos y materiales sin stock.'
+        }),
+    )
+
+@admin.register(ReporteResumenRetiros)
+class ReporteResumenRetirosAdmin(admin.ModelAdmin):
+    list_display = ('id_reporte', 'tipo_reporte', 'fecha_generacion', 'operario', 'get_periodo')
+    search_fields = ('operario__nombre',)
+    list_filter = ('fecha_generacion', 'fecha_inicio', 'fecha_fin', 'operario')
+    date_hierarchy = 'fecha_generacion'
+    ordering = ('-fecha_generacion',)
+    readonly_fields = ('fecha_generacion',)
+    
+    def get_periodo(self, obj):
+        """Muestra el período del reporte"""
+        if obj.fecha_inicio and obj.fecha_fin:
+            return f"{obj.fecha_inicio} - {obj.fecha_fin}"
+        return "-"
+    get_periodo.short_description = 'Período'
+    
+    fieldsets = (
+        ('Información General', {
+            'fields': ('tipo_reporte', 'operario', 'fecha_generacion')
+        }),
+        ('Período de Consulta', {
+            'fields': ('fecha_inicio', 'fecha_fin'),
+            'description': 'Período para el análisis de retiros de ecoladrillos.'
+        }),
+        ('Datos del Reporte', {
+            'fields': ('datos_reporte',),
+            'classes': ('collapse',),
+        }),
     )
 
 

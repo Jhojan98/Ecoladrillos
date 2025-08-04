@@ -189,10 +189,39 @@ class Reporte(models.Model):
     tipo_reporte = models.CharField(max_length=20, choices=TIPOS_REPORTE)
     fecha_generacion = models.DateTimeField(auto_now_add=True)
     operario = models.ForeignKey(Operario, on_delete=models.SET_NULL, null=True, blank=True)
-    fecha_consulta = models.DateField(null=True, blank=True)  # Para reportes de stock en fecha
-    fecha_inicio = models.DateField(null=True, blank=True)   # Para reportes de período
-    fecha_fin = models.DateField(null=True, blank=True)      # Para reportes de período
     datos_reporte = models.JSONField()  # Almacena el contenido del reporte
+
+    def obtener_ecoladrillos_sin_stock(self):
+        """Método utilitario para obtener ecoladrillos sin stock desde datos_reporte"""
+        if 'ecoladrillos_sin_stock' in self.datos_reporte:
+            return self.datos_reporte['ecoladrillos_sin_stock']
+        elif 'ecoladrillos' in self.datos_reporte:
+            return [e for e in self.datos_reporte['ecoladrillos'] if not e.get('tiene_stock', True)]
+        return []
+    
+    def obtener_materiales_sin_stock(self):
+        """Método utilitario para obtener materiales sin stock desde datos_reporte"""
+        if 'materiales_sin_stock' in self.datos_reporte:
+            return self.datos_reporte['materiales_sin_stock']
+        elif 'materiales' in self.datos_reporte:
+            return [m for m in self.datos_reporte['materiales'] if not m.get('tiene_stock', True)]
+        return []
+    
+    def obtener_todos_ecoladrillos(self):
+        """Método utilitario para obtener todos los ecoladrillos desde datos_reporte"""
+        if 'ecoladrillos' in self.datos_reporte:
+            return self.datos_reporte['ecoladrillos']
+        elif 'ecoladrillos_sin_stock' in self.datos_reporte and 'ecoladrillos_con_stock' in self.datos_reporte:
+            return self.datos_reporte['ecoladrillos_sin_stock'] + self.datos_reporte['ecoladrillos_con_stock']
+        return []
+    
+    def obtener_todos_materiales(self):
+        """Método utilitario para obtener todos los materiales desde datos_reporte"""
+        if 'materiales' in self.datos_reporte:
+            return self.datos_reporte['materiales']
+        elif 'materiales_sin_stock' in self.datos_reporte and 'materiales_con_stock' in self.datos_reporte:
+            return self.datos_reporte['materiales_sin_stock'] + self.datos_reporte['materiales_con_stock']
+        return []
 
     def __str__(self):
         operario_nombre = self.operario.nombre if self.operario else 'Sistema'
@@ -201,3 +230,176 @@ class Reporte(models.Model):
     class Meta:
         ordering = ['-fecha_generacion']
 
+
+class ReporteStockFecha(Reporte):
+    fecha_consulta = models.DateField(null=True, blank=True)  # Para reportes de stock en fecha
+    
+    def generar_datos_stock(self):
+        """Genera los datos de stock para todos los ecoladrillos y materiales en la fecha consultada"""
+        from django.utils import timezone
+        
+        # Obtener todos los ecoladrillos con su stock actual
+        ecoladrillos_data = []
+        for ecoladrillo in Ecoladrillo.objects.all():
+            ecoladrillos_data.append({
+                'id': ecoladrillo.id_ecoladrillo,
+                'nombre': ecoladrillo.nombre,
+                'descripcion': ecoladrillo.descripcion,
+                'size': ecoladrillo.get_size_display(),
+                'material_principal': ecoladrillo.material_principal.nombre,
+                'cantidad_stock': ecoladrillo.cantidad,
+                'tiene_stock': ecoladrillo.cantidad > 0
+            })
+        
+        # Obtener todos los materiales con su stock actual
+        materiales_data = []
+        for material in Material.objects.all():
+            materiales_data.append({
+                'id': material.id_insumo,
+                'nombre': material.nombre,
+                'tipo': material.tipo,
+                'cantidad_disponible': material.cantidad_disponible,
+                'unidad_medida': material.unidad_medida,
+                'tiene_stock': material.cantidad_disponible > 0
+            })
+        
+        # Guardar en datos_reporte
+        self.datos_reporte = {
+            'fecha_consulta': self.fecha_consulta.isoformat() if self.fecha_consulta else timezone.now().date().isoformat(),
+            'ecoladrillos': ecoladrillos_data,
+            'materiales': materiales_data,
+            'total_ecoladrillos': len(ecoladrillos_data),
+            'total_materiales': len(materiales_data),
+            'ecoladrillos_con_stock': len([e for e in ecoladrillos_data if e['tiene_stock']]),
+            'materiales_con_stock': len([m for m in materiales_data if m['tiene_stock']])
+        }
+        self.save()
+        return self.datos_reporte
+    
+    def __str__(self):
+        return f"Reporte Stock Fecha {self.id_reporte} - {self.get_tipo_reporte_display()} - {self.fecha_consulta}"
+
+class ReporteResumenInventario(Reporte):
+    def generar_datos_resumen(self):
+        """Genera los datos de resumen del inventario, enfocándose en items sin stock"""
+        
+        # Obtener ecoladrillos sin stock
+        ecoladrillos_sin_stock = []
+        ecoladrillos_con_stock = []
+        
+        for ecoladrillo in Ecoladrillo.objects.all():
+            ecoladrillo_data = {
+                'id': ecoladrillo.id_ecoladrillo,
+                'nombre': ecoladrillo.nombre,
+                'descripcion': ecoladrillo.descripcion,
+                'size': ecoladrillo.get_size_display(),
+                'material_principal': ecoladrillo.material_principal.nombre,
+                'cantidad_stock': ecoladrillo.cantidad,
+                'cantidad_material_requerida': ecoladrillo.cantidad_material_requerida
+            }
+            
+            if ecoladrillo.cantidad == 0:
+                ecoladrillos_sin_stock.append(ecoladrillo_data)
+            else:
+                ecoladrillos_con_stock.append(ecoladrillo_data)
+        
+        # Obtener materiales sin stock
+        materiales_sin_stock = []
+        materiales_con_stock = []
+        
+        for material in Material.objects.all():
+            material_data = {
+                'id': material.id_insumo,
+                'nombre': material.nombre,
+                'tipo': material.tipo,
+                'cantidad_disponible': material.cantidad_disponible,
+                'unidad_medida': material.unidad_medida
+            }
+            
+            if material.cantidad_disponible == 0:
+                materiales_sin_stock.append(material_data)
+            else:
+                materiales_con_stock.append(material_data)
+        
+        # Guardar en datos_reporte
+        self.datos_reporte = {
+            'ecoladrillos_sin_stock': ecoladrillos_sin_stock,
+            'ecoladrillos_con_stock': ecoladrillos_con_stock,
+            'materiales_sin_stock': materiales_sin_stock,
+            'materiales_con_stock': materiales_con_stock,
+            'resumen': {
+                'total_ecoladrillos_sin_stock': len(ecoladrillos_sin_stock),
+                'total_ecoladrillos_con_stock': len(ecoladrillos_con_stock),
+                'total_materiales_sin_stock': len(materiales_sin_stock),
+                'total_materiales_con_stock': len(materiales_con_stock)
+            }
+        }
+        self.save()
+        return self.datos_reporte
+    
+    def __str__(self):
+        return f"Reporte Resumen Inventario {self.id_reporte} - {self.get_tipo_reporte_display()}"
+
+class ReporteResumenRetiros(Reporte):
+    fecha_inicio = models.DateField(null=True, blank=True)  # Para reportes de stock en período
+    fecha_fin = models.DateField(null=True, blank=True)  # Para reportes de stock en período
+    
+    def generar_datos_retiros(self):
+        """Genera los datos de retiros en el período especificado"""
+        
+        # Filtrar retiros por fecha si están especificadas
+        retiros_query = RetiroEcoladrillo.objects.all()
+        
+        if self.fecha_inicio:
+            retiros_query = retiros_query.filter(fecha__gte=self.fecha_inicio)
+        if self.fecha_fin:
+            retiros_query = retiros_query.filter(fecha__lte=self.fecha_fin)
+        
+        # Procesar datos de retiros
+        retiros_data = []
+        total_cantidad_retirada = 0
+        ecoladrillos_retirados = {}
+        
+        for retiro in retiros_query:
+            retiro_data = {
+                'id_retiro': retiro.id_retiro,
+                'fecha': retiro.fecha.isoformat(),
+                'ecoladrillo_nombre': retiro.ecoladrillo.nombre,
+                'ecoladrillo_size': retiro.ecoladrillo.get_size_display(),
+                'cantidad': retiro.cantidad,
+                'motivo': retiro.motivo
+            }
+            retiros_data.append(retiro_data)
+            total_cantidad_retirada += retiro.cantidad
+            
+            # Agrupar por ecoladrillo
+            ecoladrillo_key = f"{retiro.ecoladrillo.nombre} ({retiro.ecoladrillo.get_size_display()})"
+            if ecoladrillo_key not in ecoladrillos_retirados:
+                ecoladrillos_retirados[ecoladrillo_key] = {
+                    'nombre': retiro.ecoladrillo.nombre,
+                    'size': retiro.ecoladrillo.get_size_display(),
+                    'total_retirado': 0,
+                    'numero_retiros': 0
+                }
+            ecoladrillos_retirados[ecoladrillo_key]['total_retirado'] += retiro.cantidad
+            ecoladrillos_retirados[ecoladrillo_key]['numero_retiros'] += 1
+        
+        # Guardar en datos_reporte
+        self.datos_reporte = {
+            'periodo': {
+                'fecha_inicio': self.fecha_inicio.isoformat() if self.fecha_inicio else None,
+                'fecha_fin': self.fecha_fin.isoformat() if self.fecha_fin else None
+            },
+            'retiros': retiros_data,
+            'resumen_por_ecoladrillo': list(ecoladrillos_retirados.values()),
+            'estadisticas': {
+                'total_retiros': len(retiros_data),
+                'total_cantidad_retirada': total_cantidad_retirada,
+                'tipos_ecoladrillos_diferentes': len(ecoladrillos_retirados)
+            }
+        }
+        self.save()
+        return self.datos_reporte
+    
+    def __str__(self):
+        return f"Reporte Resumen Retiros {self.id_reporte} - {self.get_tipo_reporte_display()}"
