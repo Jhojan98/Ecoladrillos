@@ -9,12 +9,13 @@ import { Login } from "@components/auth/Login";
 // import { Signin } from "@components/auth/Signin";
 import { AuthPage } from "@components/auth/AuthPage";
 // import { Home } from "@components/layout/Home";UserProfile";
-import Dashboard from "@components/Dashboard/Dashboard";
-import ConsultaInventario from "@components/ConsultaInventario/ConsultaInventario";
-import RegistroEcoladrillos from "@components/RegistroEcoladrillos/RegistroEcoladrillos";
-import RegistroSalidaEcoladrillos from "@components/RegistroEcoladrillos/RegistroSalidaEcoladrillos";
 import HomePage from "@components/home/HomePage";
-import RegistroMaterial from "@components/RegistroMaterial/RegistroMaterial";
+import Dashboard from "@components/dashboard/Dashboard";
+import ConsultaInventario from "@components/consultaInventario/ConsultaInventario";
+import RegistroEcoladrillos from "@components/registros/RegistroEcoladrillos";
+import RetiroEcoladrillos from "@components/registros/RetiroEcoladrillos";
+import RegistroMaterial from "@components/registros/RegistroMaterial";
+import Reports from "@components/reports/Reports";
 // styles
 import "@styles/main.scss";
 
@@ -41,8 +42,10 @@ export function AppRouter() {
             <Route index element={<Navigate to="ecobricks" replace />} />
             <Route path="ecobricks" element={<RegistroEcoladrillos />} />
             <Route path="material" element={<RegistroMaterial />} />
-            <Route path="output" element={<RegistroSalidaEcoladrillos />} />
+            <Route path="withdraw" element={<RetiroEcoladrillos />} />
           </Route>
+
+          <Route path="/reports" element={<Reports />} />
         </Route>
         <Route
           path="*"

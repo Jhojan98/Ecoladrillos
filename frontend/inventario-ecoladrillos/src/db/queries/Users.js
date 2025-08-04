@@ -1,9 +1,7 @@
 import { useMutation } from "@hooks/useMutation";
 import { useFetch } from "@hooks/useFetch";
 
-// -- get profile --
-// fetchs exclusivos para el AuthProvider
-// obtener datos del usuario
+// -- GET profile --
 export const getUser = async () => {
   // const response = await fetch("/api/me", {
   //   method: "GET",
@@ -17,37 +15,13 @@ export const getUser = async () => {
   // }
   // return await response.json();
   return {
-    id: "1111-2222-3333-4444",
+    id: 1,
     nombre: "Juan Pérez",
     email: "juan.perez@gmail.com",
   };
 };
 
-// cerrar sesión
-export const logoutUser = async () => {
-  const response = await fetch("/api/logoutM", {
-    method: "POST",
-    credentials: "include",
-  });
-  if (!response.ok) {
-    throw new Error("Error al cerrar sesión");
-  }
-  return await response.json();
-};
-
-// update user data
-export const updateUser = async (userData) => {
-  const put = useMutation();
-
-  return put.mutate(
-    "PATCH",
-    "/complete-profile",
-    userData,
-    "Error al actualizar el usuario"
-  );
-};
-
-// -- NORMAL LOGIN --
+// -- LOGIN --
 export const useLoginMutation = () => {
   const post = useMutation();
 
@@ -59,14 +33,14 @@ export const useLoginMutation = () => {
   };
 };
 
-// -- SIGN UP --
-export const useSignupMutation = () => {
-  const post = useMutation();
-
-  return {
-    post: (user) =>
-      post.mutate("POST", "/signup", user, "Error al crear el usuario"),
-    postLoading: post.loading,
-    postError: post.error,
-  };
+// -- LOGOUT --
+export const logoutUser = async () => {
+  const response = await fetch("/api/logoutM", {
+    method: "POST",
+    credentials: "include",
+  });
+  if (!response.ok) {
+    throw new Error("Error al cerrar sesión");
+  }
+  return await response.json();
 };

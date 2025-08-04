@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 // hooks
 import { useNotifier } from "@hooks/useNotifier";
 // queries
-import { useGetEcoladrillos } from "@db/queries/Inventory";
+import { useGetEcoladrillos } from "@db/queries/Ecoladrillos";
 import {
   useGetRegistersEcobricks,
   useRegisterEcobricksMutation,
 } from "@db/queries/Ecoladrillos";
 // styles
-import "./registroEcoladrillos.scss";
+import "./registros.scss";
 
 export default function RegistroEcoladrillos() {
   const notify = useNotifier();
@@ -88,8 +88,6 @@ export default function RegistroEcoladrillos() {
       ecoladrillo: registerEcoForm.idEcoladrillo,
       cantidad: registerEcoForm.cantidad,
     };
-
-    console.log("Nuevo registro:", newResgister);
 
     const response = await registerEcobricksMutate.post(newResgister);
     if (response.errorMutationMsg) {

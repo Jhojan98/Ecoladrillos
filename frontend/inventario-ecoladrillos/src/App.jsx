@@ -1,4 +1,4 @@
-import { AppRouter } from "@components/Navigation/Router/AppRouter";
+import { AppRouter } from "@components/navigation/router/AppRouter";
 // prime react
 import { PrimeReactProvider } from "primereact/api";
 import { ConfirmDialog } from "primereact/confirmdialog";

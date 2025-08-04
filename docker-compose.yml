@@ -32,3 +32,13 @@ services:
         condition: service_healthy
     links:
       - db
+
+  frontend:
+    container_name: react-frontend
+    build:
+      context: ./frontend/inventario-ecoladrillos  # <- Ruta donde está tu frontend con el Dockerfile
+      dockerfile: Dockerfile
+    ports:
+      - 3000:80  # React servirá en el puerto 80 dentro del contenedor, pero tú lo expones en 3000
+    depends_on:
+      - web

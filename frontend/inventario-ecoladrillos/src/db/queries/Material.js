@@ -1,6 +1,12 @@
 import { useFetch } from "@hooks/useFetch";
 import { useMutation } from "@hooks/useMutation";
 
+// -- MAIN --
+// GET materiales
+export const useGetMaterials = () => {
+  return useFetch("/materiales/reporte_stock", "Error al obtener los materiales");
+};
+
 // POST/PUT/DEL ecoladrillo
 export const useMaterialsMutation = () => {
   const post = useMutation();
@@ -34,6 +40,7 @@ export const useMaterialsMutation = () => {
   };
 };
 
+// --- REGISTROS ---
 // GET registro
 export const useGetRegistersMaterials = () => {
   return useFetch(
@@ -42,7 +49,7 @@ export const useGetRegistersMaterials = () => {
   );
 };
 
-// post registro
+// POST registro
 export const useRegisterMaterialMutation = () => {
   const post = useMutation();
 

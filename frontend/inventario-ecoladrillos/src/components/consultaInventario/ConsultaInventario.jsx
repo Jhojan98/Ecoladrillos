@@ -8,10 +8,8 @@ import "./consultaInventario.scss";
 
 export default function ConsultaInventario() {
   const {
-    ecoladrillos,
-    materiales,
-    totalEcoladrillos,
-    totalMateriales,
+    ecoladrillosData,
+    materialesData,
     openCreateModal,
     openEditEcoModal,
     openEditMaterialModal,
@@ -27,9 +25,11 @@ export default function ConsultaInventario() {
       </header>
 
       {/* Ecoladrillos */}
-      <h2 className="subheader">Ecoladrillos ({totalEcoladrillos})</h2>
+      <h2 className="subheader">
+        Ecoladrillos ({ecoladrillosData?.stock_total || 0})
+      </h2>
       <div className="inventory-cards">
-        {ecoladrillos.map((ecoladrillo) => (
+        {ecoladrillosData?.ecoladrillos?.map((ecoladrillo) => (
           <Card
             key={ecoladrillo.id_ecoladrillo}
             cartType="Ecoladrillo"
@@ -52,9 +52,11 @@ export default function ConsultaInventario() {
       </div>
 
       {/* Materiales */}
-      <h2 className="subheader">Materiales ({totalMateriales})</h2>
+      <h2 className="subheader">
+        Materiales ({materialesData?.stock_total || 0})
+      </h2>
       <div className="inventory-cards">
-        {materiales.map((material) => (
+        {materialesData?.materiales?.map((material) => (
           <Card
             key={material.id_insumo}
             cartType="Material"

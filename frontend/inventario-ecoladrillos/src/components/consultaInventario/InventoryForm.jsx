@@ -23,10 +23,10 @@ export function InventoryForm(props) {
     : "Crear Nuevo Material";
 
   return (
-    <div className="modal-bg" onClick={() => setOpenModal(null)}>
+    <div className="modal-bg">
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <button className="close" onClick={() => setOpenModal(null)}>
-          ×
+          <i className="pi pi-times"></i>
         </button>
         <h2>{title}</h2>
 
@@ -120,6 +120,7 @@ export function InventoryForm(props) {
                     onChange={handleInputChange}
                     min="0"
                     step="1"
+                    disabled={isEditing}
                     required
                   />
                 </div>
@@ -130,14 +131,24 @@ export function InventoryForm(props) {
               <>
                 <div className="form-group">
                   <label htmlFor="tipo">Tipo:</label>
-                  <input
-                    type="text"
+                  <select
                     id="tipo"
                     name="tipo"
                     value={formData.tipo}
                     onChange={handleInputChange}
                     required
-                  />
+                  >
+                    <option value="">Selecciona un tipo</option>
+                    <option value="plastico">Plástico</option>
+                    <option value="residuos_organicos">
+                      Residuos Orgánicos
+                    </option>
+                    <option value="papel">Papel</option>
+                    <option value="carton">Cartón</option>
+                    <option value="paja">Paja</option>
+                    <option value="madera">Madera</option>
+                    <option value="otro">Otro</option>
+                  </select>
                 </div>
 
                 <div className="form-group">
@@ -152,6 +163,7 @@ export function InventoryForm(props) {
                     onChange={handleInputChange}
                     min="0"
                     step="1"
+                    disabled={isEditing}
                     required
                   />
                 </div>

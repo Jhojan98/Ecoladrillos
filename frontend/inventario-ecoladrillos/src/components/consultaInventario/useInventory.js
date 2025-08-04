@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { useNotifier } from "@hooks/useNotifier";
 import { useConfirm } from "@hooks/useConfirm";
 // queries
-import { useGetEcoladrillos, useGetMaterials } from "@db/queries/Inventory";
+import { useGetEcoladrillos } from "@db/queries/Ecoladrillos";
+import { useGetMaterials } from "@db/queries/Material";
 import { useEcobricksMutation } from "@db/queries/Ecoladrillos";
 import { useMaterialsMutation } from "@db/queries/Material";
 
@@ -12,28 +13,28 @@ export function useInventory() {
   const confirm = useConfirm();
 
   // --- OBTERENER ECOALDRILLOS y MATERIALES ---
-  const [ecoladrillos, setEcoladrillos] = useState([]);
-  const [materiales, setMateriales] = useState([]);
+  const [ecoladrillosData, setEcoladrillosData] = useState({
+  });
+  const [materialesData, setMaterialesData] = useState({});
 
   const { fetchData: getEcoladrillos } = useGetEcoladrillos();
   const { fetchData: getMateriales } = useGetMaterials();
 
   useEffect(() => {
     const fetchData = async () => {
-      const ecoladrillos = await getEcoladrillos();
-      const materiales = await getMateriales();
+      const ecoladrillosResult = await getEcoladrillos();
+      const materialesResult = await getMateriales();
 
-      if (ecoladrillos.fetchErrorMsg) {
-        notify.error(ecoladrillos.fetchErrorMsg);
+      if (ecoladrillosResult.fetchErrorMsg) {
+        notify.error(ecoladrillosResult.fetchErrorMsg);
         return;
       }
-      if (materiales.fetchErrorMsg) {
-        notify.error(materiales.fetchErrorMsg);
+      if (materialesResult.fetchErrorMsg) {
+        notify.error(materialesResult.fetchErrorMsg);
         return;
       }
-
-      setEcoladrillos(ecoladrillos.results || []);
-      setMateriales(materiales.results || []);
+      setEcoladrillosData(ecoladrillosResult || {});
+      setMaterialesData(materialesResult || {});
     };
 
     fetchData();
@@ -43,7 +44,7 @@ export function useInventory() {
   const refreshEcoladrillos = async () => {
     const updatedEcoladrillos = await getEcoladrillos();
     if (!updatedEcoladrillos.fetchErrorMsg) {
-      setEcoladrillos(updatedEcoladrillos.results || []);
+      setEcoladrillosData(updatedEcoladrillos || {});
     }
   };
 
@@ -51,19 +52,9 @@ export function useInventory() {
   const refreshMateriales = async () => {
     const updatedMateriales = await getMateriales();
     if (!updatedMateriales.fetchErrorMsg) {
-      setMateriales(updatedMateriales.results || []);
+      setMaterialesData(updatedMateriales || {});
     }
   };
-
-  // Totales
-  const totalEcoladrillos = ecoladrillos.reduce(
-    (acc, e) => acc + e.cantidad,
-    0
-  );
-  const totalMateriales = materiales.reduce(
-    (acc, m) => acc + m.cantidad_disponible,
-    0
-  );
 
   const [openModal, setOpenModal] = useState(false);
 
@@ -267,10 +258,8 @@ export function useInventory() {
   };
 
   return {
-    ecoladrillos,
-    materiales,
-    totalEcoladrillos,
-    totalMateriales,
+    ecoladrillosData,
+    materialesData,
     // form
     openModal,
     openCreateModal,
@@ -280,7 +269,7 @@ export function useInventory() {
 
     formProps: {
       formType,
-      materiales,
+      materialesData,
       loading:
         formType === "ecoladrillo"
           ? ecobricksMutation.loading

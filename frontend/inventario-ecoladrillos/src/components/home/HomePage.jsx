@@ -88,7 +88,7 @@ const HomePage = () => {
             <motion.div
               className="card"
               whileHover={{ y: -5, boxShadow: "0 8px 16px rgba(0,0,0,0.15)" }}
-              onClick={() => navigate("/dashboard")}
+              onClick={() => navigate("/reports")}
             >
               <span className="icon">📊</span>
               <h3>Reportes</h3>
@@ -110,7 +110,7 @@ const HomePage = () => {
                   <button onClick={() => navigate("/register/ecobricks")}>
                     Registrar Entrada
                   </button>
-                  <button onClick={() => navigate("/register/output")}>
+                  <button onClick={() => navigate("/register/withdraw")}>
                     Registrar Salida
                   </button>
                 </div>
