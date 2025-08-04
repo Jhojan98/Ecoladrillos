@@ -4,7 +4,7 @@ import { useMutation } from "@hooks/useMutation";
 // -- MAIN --
 // GET materiales
 export const useGetMaterials = () => {
-  return useFetch("/materiales", "Error al obtener los materiales");
+  return useFetch("/materiales/reporte_stock", "Error al obtener los materiales");
 };
 
 // POST/PUT/DEL ecoladrillo
