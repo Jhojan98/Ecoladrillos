@@ -26,7 +26,7 @@ export default function RegistroEcoladrillos() {
       return;
     }
 
-    setEcoladrillos(ecoladrillos.results || []);
+    setEcoladrillos(ecoladrillos.ecoladrillos || []);
   };
 
   // ------ OBTENER REGISTROS ECOLADRILLOS ------

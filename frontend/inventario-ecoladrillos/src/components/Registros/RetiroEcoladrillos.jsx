@@ -24,7 +24,7 @@ export default function RetiroEcoladrillos() {
       return;
     }
 
-    setEcoladrillos(ecoladrillos.results || []);
+    setEcoladrillos(ecoladrillos.ecoladrillos || []);
   };
 
   // ------ OBTENER RETIROS ECOLADRILLOS ------

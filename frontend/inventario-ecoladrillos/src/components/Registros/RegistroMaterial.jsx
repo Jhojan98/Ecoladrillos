@@ -24,7 +24,7 @@ export default function RegistroMaterial() {
       return;
     }
 
-    setMateriales(materials.results || []);
+    setMateriales(materials.materiales || []);
   };
 
   // ------ OBTENER REGISTROS MATERIALES ------

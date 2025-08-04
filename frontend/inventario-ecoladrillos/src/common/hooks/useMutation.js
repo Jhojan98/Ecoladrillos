@@ -37,8 +37,7 @@ export const useMutation = () => {
         method,
         credentials: "include", // Importante: incluir cookies en la petición
         headers: {
-          ...(isFormData ? {} : { "Content-Type": "application/json" }),
-          ...options.headers,
+          "Content-Type": "application/json",
         },
         body: body ? (isFormData ? body : JSON.stringify(body)) : null,
       });
