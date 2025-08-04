@@ -1,7 +1,7 @@
 export function InventoryForm(props) {
   const {
     formType,
-    materiales,
+    materialesData,
     loading,
     formData,
     isEditing,
@@ -84,7 +84,7 @@ export function InventoryForm(props) {
                     required
                   >
                     <option value="">Selecciona un material</option>
-                    {materiales.map((material) => (
+                    {materialesData?.materiales?.map((material) => (
                       <option
                         key={material.id_insumo}
                         value={material.id_insumo}
