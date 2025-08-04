@@ -17,7 +17,7 @@ export const getUser = async () => {
   // }
   // return await response.json();
   return {
-    id: "1111-2222-3333-4444",
+    id: 1,
     nombre: "Juan Pérez",
     email: "juan.perez@gmail.com",
   };

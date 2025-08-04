@@ -15,6 +15,7 @@ import ConsultaInventario from "@components/ConsultaInventario/ConsultaInventari
 import RegistroEcoladrillos from "@components/Registros/RegistroEcoladrillos";
 import RetiroEcoladrillos from "@components/Registros/RetiroEcoladrillos";
 import RegistroMaterial from "@components/Registros/RegistroMaterial";
+import Reports from "@components/reports/Reports";
 // styles
 import "@styles/main.scss";
 
@@ -43,6 +44,8 @@ export function AppRouter() {
             <Route path="material" element={<RegistroMaterial />} />
             <Route path="withdraw" element={<RetiroEcoladrillos />} />
           </Route>
+
+          <Route path="/reports" element={<Reports />} />
         </Route>
         <Route
           path="*"

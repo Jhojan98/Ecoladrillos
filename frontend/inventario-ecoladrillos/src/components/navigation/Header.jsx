@@ -97,6 +97,10 @@ export function Header(props) {
           Inventario
         </Link>
 
+        <Link className="link" to="/reports">
+          Reportes
+        </Link>
+
         {/* desplegable */}
         <div className="dropdown relative">
           <button className="link btn-clean" onClick={() => setShowDropdown(!showDropdown)}>

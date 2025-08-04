@@ -270,18 +270,21 @@
 
     .close {
       position: absolute;
-      top: 1rem;
-      right: 1rem;
+      display: flex;
+      top: 1.5rem;
+      right: 1.5rem;
       background: transparent;
       border: none;
-      font-size: 1.8rem;
       cursor: pointer;
       color: $gray-4;
       transition: color 0.3s;
       z-index: 10;
 
-      &:hover {
-        color: $red-1;
+      i {
+        font-size: 1.2rem;
+        &:hover {
+          color: $red-1;
+        }
       }
     }
   }
@@ -321,7 +324,9 @@
       font-size: 0.95rem;
     }
 
-    input, textarea, select {
+    input,
+    textarea,
+    select {
       width: 100%;
       padding: 0.8rem;
       border: 1px solid #ddd;
@@ -350,7 +355,7 @@
 
     select {
       cursor: pointer;
-      
+
       &:hover {
         border-color: $green-1;
       }
