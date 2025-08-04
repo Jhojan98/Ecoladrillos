@@ -1,6 +1,12 @@
 import { useFetch } from "@hooks/useFetch";
 import { useMutation } from "@hooks/useMutation";
 
+// --- MAIN ---
+// GET ecoladrillos
+export const useGetEcoladrillos = () => {
+  return useFetch("/ecoladrillos", "Error al obtener los ecoladrillos");
+};
+
 // POST/PUT/DEL ecoladrillo
 export const useEcobricksMutation = () => {
   const post = useMutation();
@@ -34,6 +40,7 @@ export const useEcobricksMutation = () => {
   };
 };
 
+// --- REGISTROS ---
 // GET registro
 export const useGetRegistersEcobricks = () => {
   return useFetch(
@@ -42,7 +49,7 @@ export const useGetRegistersEcobricks = () => {
   );
 };
 
-// post registro
+// POST registro
 export const useRegisterEcobricksMutation = () => {
   const post = useMutation();
 
@@ -59,6 +66,7 @@ export const useRegisterEcobricksMutation = () => {
   };
 };
 
+// --- RETIROS ---
 // GET retiros
 export const useGetRetirosEcobricks = () => {
   return useFetch(
@@ -67,7 +75,7 @@ export const useGetRetirosEcobricks = () => {
   );
 };
 
-// retiro
+// POST retiro
 export const useRetiroEcoladrillosMutation = () => {
   const post = useMutation();
 

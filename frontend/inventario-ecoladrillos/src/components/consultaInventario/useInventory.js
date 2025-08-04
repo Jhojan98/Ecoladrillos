@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { useNotifier } from "@hooks/useNotifier";
 import { useConfirm } from "@hooks/useConfirm";
 // queries
-import { useGetEcoladrillos, useGetMaterials } from "@db/queries/Inventory";
+import { useGetEcoladrillos } from "@db/queries/Ecoladrillos";
+import { useGetMaterials } from "@db/queries/Material";
 import { useEcobricksMutation } from "@db/queries/Ecoladrillos";
 import { useMaterialsMutation } from "@db/queries/Material";
 

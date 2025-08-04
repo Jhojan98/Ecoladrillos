@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 // hooks
 import { useNotifier } from "@hooks/useNotifier";
 // queries
-import { useGetMaterials } from "@db/queries/Inventory";
+import { useGetMaterials } from "@db/queries/Material";
 import {
   useGetRegistersMaterials,
   useRegisterMaterialMutation,

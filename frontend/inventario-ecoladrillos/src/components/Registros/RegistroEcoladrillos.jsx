@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 // hooks
 import { useNotifier } from "@hooks/useNotifier";
 // queries
-import { useGetEcoladrillos } from "@db/queries/Inventory";
+import { useGetEcoladrillos } from "@db/queries/Ecoladrillos";
 import {
   useGetRegistersEcobricks,
   useRegisterEcobricksMutation,
