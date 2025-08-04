@@ -14,9 +14,8 @@ export function useInventory() {
 
   // --- OBTERENER ECOALDRILLOS y MATERIALES ---
   const [ecoladrillosData, setEcoladrillosData] = useState({
-    ecoladrillos: [],
   });
-  const [materialesData, setMaterialesData] = useState({ materiales: [] });
+  const [materialesData, setMaterialesData] = useState({});
 
   const { fetchData: getEcoladrillos } = useGetEcoladrillos();
   const { fetchData: getMateriales } = useGetMaterials();
@@ -34,8 +33,8 @@ export function useInventory() {
         notify.error(materialesResult.fetchErrorMsg);
         return;
       }
-      setEcoladrillosData(ecoladrillosResult || { ecoladrillos: [] });
-      setMaterialesData(materialesResult || { materiales: [] });
+      setEcoladrillosData(ecoladrillosResult || {});
+      setMaterialesData(materialesResult || {});
     };
 
     fetchData();
@@ -45,7 +44,7 @@ export function useInventory() {
   const refreshEcoladrillos = async () => {
     const updatedEcoladrillos = await getEcoladrillos();
     if (!updatedEcoladrillos.fetchErrorMsg) {
-      setEcoladrillosData(updatedEcoladrillos || { ecoladrillos: [] });
+      setEcoladrillosData(updatedEcoladrillos || {});
     }
   };
 
@@ -53,7 +52,7 @@ export function useInventory() {
   const refreshMateriales = async () => {
     const updatedMateriales = await getMateriales();
     if (!updatedMateriales.fetchErrorMsg) {
-      setMaterialesData(updatedMateriales || { materiales: [] });
+      setMaterialesData(updatedMateriales || {});
     }
   };
 
