@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 // contexts
@@ -18,9 +18,11 @@ export function Login(props) {
   const { isAuthenticated, checkAuthStatus } = useAuth();
 
   // si ya esta logueado, redirigir a home
-  if (isAuthenticated) {
-    navigate("/home");
-  }
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/home");
+    }
+  }, [isAuthenticated]);
 
   const {
     register,
@@ -38,37 +40,30 @@ export function Login(props) {
       return;
     }
 
-    console.log("users", users);
-
     users.forEach((user) => {
-      if (user.email === data.email && user.password === data.password) {
-        localStorage.setItem("userData", JSON.stringify(user));
-        notify.success("Bienvenido, " + user.name);
+      if (user.email === data.email && user.contraseña === data.password) {
+        localStorage.setItem("user-id", user.id_usuario);
+        localStorage.setItem("user-name", user.nombre);
+        localStorage.setItem("user-email", user.email);
+        localStorage.setItem("user-role", user.cargo ? "operario" : "admin");
+        notify.success("Bienvenido, " + user.nombre);
+        navigate("/home");
+        checkAuthStatus();
         return;
       }
     });
 
-    // Manejo de errores del backend
-    // if (result.errorJsonMsg === "db data access failure") {
-    //   setError("email", {
-    //     type: "manual",
-    //     message: "Correo no registrado",
-    //   });
-    //   return;
-    // } else if (result.errorJsonMsg === "UnAuthorization") {
-    //   setError("password", {
-    //     type: "manual",
-    //     message: "Contraseña incorrecta",
-    //   });
-    //   return;
-    // } else if (result.errorJsonMsg || result.errorMutationMsg) {
-    //   notify.info(
-    //     "Si no puedes ingresar, intenta con tu correo de microsoft institucional"
-    //   );
-    // }
-    if (result?.url) {
-      navigate("/home");
-      checkAuthStatus();
+    const existEmail = users.some((user) => user.email === data.email);
+    if (!existEmail) {
+      setError("email", {
+        type: "manual",
+        message: "Correo no registrado",
+      });
+    } else if (localStorage.getItem("user-role") === null) {
+      setError("password", {
+        type: "manual",
+        message: "Contraseña incorrecta",
+      });
     }
   };
 
@@ -87,8 +82,8 @@ export function Login(props) {
     password: {
       required: "Ingresa tu contraseña",
       minLength: {
-        value: 8,
-        message: "Mínimo 8 caracteres",
+        value: 4,
+        message: "Mínimo 4 caracteres",
       },
     },
   };
@@ -141,9 +136,6 @@ export function Login(props) {
         )}
       </label>
 
-      {/* <a className="link forgot-pass-txt" href="#">
-        Recuperar contraseña
-      </a> */}
       <button type="submit" className="btn-primary btn-login circular-radius">
         Ingresar
       </button>

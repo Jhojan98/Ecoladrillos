@@ -1,25 +1,4 @@
-import { useMutation } from "@hooks/useMutation";
 import { useFetch } from "@hooks/useFetch";
-
-// -- GET profile --
-export const getUser = async () => {
-  // const response = await fetch("/api/me", {
-  //   method: "GET",
-  //   credentials: "include",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
-  // if (!response.ok) {
-  //   throw new Error("Error al obtener el usuario");
-  // }
-  // return await response.json();
-  // return {
-  //   id: 1,
-  //   nombre: "Juan Pérez",
-  //   email: "juan.perez@gmail.com",
-  // };
-};
 
 // -- LOGIN --
 export const useSimulateLogin = () => {
@@ -46,14 +25,20 @@ export const useSimulateLogin = () => {
   };
 };
 
+// -- GET profile --
+export const getUser = () => {
+  return {
+    id: localStorage.getItem("user-id"),
+    name: localStorage.getItem("user-name"),
+    email: localStorage.getItem("user-email"),
+    role: localStorage.getItem("user-role"),
+  };
+};
+
 // -- LOGOUT --
-export const logoutUser = async () => {
-  const response = await fetch("/api/logoutM", {
-    method: "POST",
-    credentials: "include",
-  });
-  if (!response.ok) {
-    throw new Error("Error al cerrar sesión");
-  }
-  return await response.json();
+export const logoutUser = () => {
+  localStorage.removeItem("user-id");
+  localStorage.removeItem("user-name");
+  localStorage.removeItem("user-email");
+  localStorage.removeItem("user-role");
 };

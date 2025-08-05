@@ -12,6 +12,7 @@ import {
   LineElement,
   PointElement,
   RadialLinearScale,
+  Filler,
 } from "chart.js";
 import { Card, Table, StatCard, MetricGrid, AlertCard } from "./DashboardUI";
 import {
@@ -36,7 +37,8 @@ Chart.register(
   ArcElement,
   LineElement,
   PointElement,
-  RadialLinearScale
+  RadialLinearScale,
+  Filler
 );
 
 const chartOptions = {
@@ -301,7 +303,6 @@ export default function Dashboard() {
     
     // Crear datos alineados para cada dataset
     const createAlignedData = (monthlyData) => {
-      console.log("Datos mensuales:", sortedDays, monthlyData);
       return sortedDays.map(day => {
         const index = monthlyData.labels.indexOf(day);
         return index !== -1 ? monthlyData.data[index] : 0;
