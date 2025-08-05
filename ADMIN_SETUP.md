@@ -1,9 +1,5 @@
 # Configuración del Admin de Django - Inventario de Ecoladrillos
 
-## Panel de Administración Configurado
-
-Se han agregado todos los modelos al panel de administración de Django con las siguientes características:
-
 ### 📋 **Modelos Disponibles en Admin:**
 
 #### 1. **Operarios**

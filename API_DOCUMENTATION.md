@@ -242,37 +242,3 @@ curl -X GET http://localhost:8000/api/v1/reportes/operarios_disponibles/
 ✅ **Panel de administración** configurado
 ✅ **Versiones actualizadas** compatibles con Python 3.10
 
-## Solución al problema de Docker
-
-**Error resuelto:** `djangorestframework-simplejwt==4.4.0` no era compatible con Python 3.10.
-
-**Solución aplicada:**
-1. ✅ Actualizado `requirements.txt` con versiones compatibles
-2. ✅ Configurado JWT con `djangorestframework-simplejwt==5.3.1`
-3. ✅ Agregados endpoints de autenticación
-4. ✅ Configuración completa en `settings.py`
-
-## Próximos pasos recomendados
-
-1. **Autenticación**: Implementar login/logout con tokens JWT
-2. **Permisos**: Restringir operaciones según tipo de usuario
-3. **Validaciones**: Agregar validaciones de negocio más específicas
-4. **Testing**: Crear tests para los endpoints
-5. **Documentación automática**: Integrar Swagger/OpenAPI
-
-## Cómo probar la API
-
-1. Ejecuta el servidor: `python manage.py runserver`
-2. Visita `http://localhost:8000/api/v1/` en tu navegador
-3. Usa la interfaz web navegable de Django REST Framework
-4. O usa herramientas como Postman, curl o Thunder Client
-
-## Estructura de archivos creados
-
-```
-Inventario/
-├── api/
-│   ├── serializers.py  # Conversión datos ↔ JSON
-│   ├── views.py        # Lógica de endpoints
-│   └── urls.py         # Configuración de rutas
-```
