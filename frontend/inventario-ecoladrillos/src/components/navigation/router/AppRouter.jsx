@@ -33,7 +33,12 @@ export function AppRouter() {
         <Route path="/login" element={<AuthPage AuthElement={Login} />} />
 
         <Route path="/" element={<BasePage />}>
-          <Route index element={<Navigate to="/home" replace />} />
+          <Route
+            index
+            element={
+              <Navigate to={isAuthenticated ? "/home" : "/logins"} replace />
+            }
+          />
           {isAuthenticated && <Route path="/home" element={<HomePage />} />}
           {userData.userRole === "admin" && (
             <Route path="/dashboard" element={<Dashboard />} />
