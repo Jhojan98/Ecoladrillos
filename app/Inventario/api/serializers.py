@@ -8,19 +8,13 @@ from ..models import (
 class OperarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Operario
-        fields = ['id_usuario', 'nombre', 'email', 'cargo']
-        extra_kwargs = {
-            'contraseña': {'write_only': True}  # No mostrar contraseña en respuestas
-        }
+        fields = ['id_usuario', 'nombre', 'email', 'cargo', 'contraseña']
 
 class AdministradorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Administrador
-        fields = ['id_usuario', 'nombre', 'email']
-        extra_kwargs = {
-            'contraseña': {'write_only': True}
-        }
-
+        fields = ['id_usuario', 'nombre', 'email','contraseña']
+        
 class EcoladrilloSerializer(serializers.ModelSerializer):
     material_principal_nombre = serializers.CharField(source='material_principal.nombre', read_only=True)
     size_display = serializers.CharField(source='get_size_display', read_only=True)
