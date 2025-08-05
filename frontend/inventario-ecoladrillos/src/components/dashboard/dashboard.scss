@@ -1,7 +1,16 @@
+@use "@styles/variables" as *;
+
 .dashboard-container {
-  padding: 1rem 2rem;
+  padding: 1.5rem;
   gap: 2rem;
   max-width: 1500px;
+
+  h2 {
+    text-align: center;
+    color: $green-1;
+    font-size: 2rem;
+    font-weight: 700;
+  }
 
   .dashboard-cards {
     gap: 1.5rem;
