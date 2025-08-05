@@ -1,0 +1,176 @@
+@use "@styles/variables" as *;
+
+$neumorphic-color: #e0f2e9; // verde pastel muy suave
+$neu-shadow-dark: #b6d1c3;
+$neu-shadow-light: #ffffff;
+$neu-text-color: $green-1; // azul suave
+
+// neumorphic blue
+// $neumorphic-color: #c6d7f5;
+// $neu-shadow-dark: #a4b7d8;
+// $neu-shadow-light: #e4edfc;
+// $neu-text-color: #3d81c5;
+
+$neumorphic-shadow: 4px 4px 8px $neu-shadow-dark, -4px -4px 10px $neu-shadow-light;
+$neumorphic-input-shadow: inset 4px 4px 8px $neu-shadow-dark, inset -4px -4px 8px $neu-shadow-light;
+
+// $neumorphic-light-shadow: 4px 4px 8px #b6d1c3, -6px -6px 12px #ffffff;
+
+.registro-container {
+  padding: 2rem;
+  min-height: 100vh;
+  background: $neumorphic-color;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  // box-shadow: 0 0px 70px 70px $neumorphic-color;
+
+  h1 {
+    color: $neu-text-color;
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    font-weight: 700;
+  }
+
+  /* Estilo neumórfico para el formulario */
+  .registro-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    background: $neumorphic-color;
+    border-radius: 20px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 8px 8px 16px $neu-shadow-dark, -8px -8px 16px $neu-shadow-light;
+    animation: fadeIn 0.6s ease;
+
+    label {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #2d3748;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      input,
+      select,
+      textarea {
+        background: $neumorphic-color;
+        border: none;
+        padding: 0.9rem 1.2rem;
+        border-radius: 12px;
+        font-size: 1rem;
+        box-shadow: $neumorphic-input-shadow;
+        transition: all 0.3s ease;
+
+        &:focus {
+          box-shadow: inset 2px 2px 6px $neu-shadow-dark, inset -2px -2px 6px $neu-shadow-light;
+          outline: none;
+        }
+      }
+      /* Mensaje de error neumórfico */
+      .error-msg {
+        color: $red-1;
+        font-weight: 600;
+        text-align: right;
+      }
+    }
+
+    .btn-submit {
+      background: $neumorphic-color;
+      color: $neu-text-color;
+      font-weight: 700;
+      padding: 0.9rem 1.5rem;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      border: none;
+      box-shadow: 4px 4px 8px $neu-shadow-dark, -4px -4px 8px $neu-shadow-light;
+      transition: all 0.2s ease;
+
+      &:active {
+        box-shadow: $neumorphic-input-shadow;
+        color: #2d3748;
+      }
+
+      &:hover {
+        color: #37445a;
+      }
+    }
+  }
+  .registro-reciente {
+    margin: 2rem;
+    color: $neu-text-color;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  /* Tabla con estilo neumórfico */
+  .registros-table {
+    width: 100%;
+    max-width: 700px;
+    border-radius: 20px;
+    background: $neumorphic-color;
+    box-shadow: 8px 8px 16px $neu-shadow-dark, -8px -8px 16px $neu-shadow-light;
+    overflow: hidden;
+
+    th,
+    td {
+      padding: 1rem;
+      text-align: left;
+      text-align: center;
+    }
+
+    th {
+      background: $neumorphic-color;
+      color: $neu-text-color;
+      font-weight: 700;
+      font-size: 0.9rem;
+      box-shadow: $neumorphic-input-shadow;
+    }
+
+    tr {
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: $neu-shadow-light;
+      }
+    }
+
+    td {
+      color: #4a5568;
+    }
+  }
+
+  /* Animaciones suaves al recargar pagina */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .registro-ecoladrillos-container {
+      padding: 1rem;
+    }
+
+    .registros-table {
+      width: fit-content;
+      display: block;
+      overflow-x: auto;
+
+      th,
+      td {
+        min-width: 120px;
+      }
+    }
+  }
+}

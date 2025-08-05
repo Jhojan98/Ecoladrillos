@@ -2,8 +2,6 @@
 
 ## Panel de Administración Configurado
 
-Se han agregado todos los modelos al panel de administración de Django con las siguientes características:
-
 ### 📋 **Modelos Disponibles en Admin:**
 
 #### 1. **Operarios**
@@ -112,4 +110,3 @@ http://localhost:8000/admin/
 3. **Relaciones**: Los campos relacionados muestran información descriptiva
 4. **Búsquedas**: Optimizadas para encontrar información rápidamente
 
-¡Ahora tienes un panel de administración completo y profesional para gestionar todo el inventario de ecoladrillos!
