@@ -6,7 +6,7 @@ import { useAuth } from "@contexts/AuthContext";
 // hooks
 import { useNotifier } from "@hooks/useNotifier";
 // queries
-import { useLoginMutation } from "@db/queries/Users";
+import { useSimulateLogin } from "@db/queries/Users";
 // icons
 
 export function Login(props) {
@@ -29,30 +29,43 @@ export function Login(props) {
     setError,
   } = useForm();
 
-  const loginMutate = useLoginMutation();
-
+  const { fetchData: getUsers } = useSimulateLogin();
   // verificar el usuario
   const onSubmit = async (data) => {
-    const result = await loginMutate.post(data);
+    const users = await getUsers();
+    if (users.length === 0) {
+      notify.error("No se encontraron usuarios");
+      return;
+    }
+
+    console.log("users", users);
+
+    users.forEach((user) => {
+      if (user.email === data.email && user.password === data.password) {
+        localStorage.setItem("userData", JSON.stringify(user));
+        notify.success("Bienvenido, " + user.name);
+        return;
+      }
+    });
 
     // Manejo de errores del backend
-    if (result.errorJsonMsg === "db data access failure") {
-      setError("email", {
-        type: "manual",
-        message: "Correo no registrado",
-      });
-      return;
-    } else if (result.errorJsonMsg === "UnAuthorization") {
-      setError("password", {
-        type: "manual",
-        message: "Contraseña incorrecta",
-      });
-      return;
-    } else if (result.errorJsonMsg || result.errorMutationMsg) {
-      notify.info(
-        "Si no puedes ingresar, intenta con tu correo de microsoft institucional"
-      );
-    }
+    // if (result.errorJsonMsg === "db data access failure") {
+    //   setError("email", {
+    //     type: "manual",
+    //     message: "Correo no registrado",
+    //   });
+    //   return;
+    // } else if (result.errorJsonMsg === "UnAuthorization") {
+    //   setError("password", {
+    //     type: "manual",
+    //     message: "Contraseña incorrecta",
+    //   });
+    //   return;
+    // } else if (result.errorJsonMsg || result.errorMutationMsg) {
+    //   notify.info(
+    //     "Si no puedes ingresar, intenta con tu correo de microsoft institucional"
+    //   );
+    // }
     if (result?.url) {
       navigate("/home");
       checkAuthStatus();
@@ -80,10 +93,6 @@ export function Login(props) {
     },
   };
 
-  const handleLoggin = () => {
-    window.location.href = "http://localhost:8080/v1/auth/microsoftonline";
-  };
-
   return (
     <form
       className="auth-form flex justify-center align-center flex-column box-shadow"
@@ -108,23 +117,25 @@ export function Login(props) {
       {/* Input de contraseña con icono */}
       <label className="form__field password-input-container relative">
         <span>Contraseña</span>
-        <input
-          className="inp"
-          type={showPassword ? "text" : "password"}
-          autoComplete="current-password"
-          placeholder="•••••••••"
-          {...register("password", validationRules.password)}
-        />
-        <button
-          type="button"
-          className="password-eye-btn absolute btn-clean"
-          onClick={() => setShowPassword(!showPassword)}
-        >
-          <img
-            src={showPassword ? eyeSlashIcon : eyeIcon}
-            alt={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+        <div className="flex align-center">
+          <input
+            className="inp"
+            type={showPassword ? "text" : "password"}
+            autoComplete="current-password"
+            placeholder="Contraseña"
+            {...register("password", validationRules.password)}
           />
-        </button>
+          <button
+            type="button"
+            className="password-eye-btn absolute btn-clean"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            <img
+              src={showPassword ? eyeSlashIcon : eyeIcon}
+              alt={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+            />
+          </button>
+        </div>
         {errors.password && (
           <p className="error-inp-message">{errors.password.message}</p>
         )}

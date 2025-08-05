@@ -14,22 +14,35 @@ export const getUser = async () => {
   //   throw new Error("Error al obtener el usuario");
   // }
   // return await response.json();
-  return {
-    id: 1,
-    nombre: "Juan Pérez",
-    email: "juan.perez@gmail.com",
-  };
+  // return {
+  //   id: 1,
+  //   nombre: "Juan Pérez",
+  //   email: "juan.perez@gmail.com",
+  // };
 };
 
 // -- LOGIN --
-export const useLoginMutation = () => {
-  const post = useMutation();
+export const useSimulateLogin = () => {
+  const { fetchData: getAdministradores } = useFetch(
+    "/administradores",
+    "Error al obtener los administradores",
+    false
+  );
+  const { fetchData: getOperarios } = useFetch(
+    "/operarios",
+    "Error al obtener los operarios",
+    false
+  );
+
+  const getUsers = async () => [
+    ...((await getAdministradores())?.results || []),
+    ...((await getOperarios())?.results || []),
+  ];
 
   return {
-    post: (user) =>
-      post.mutate("POST", "/login", user, "Error al iniciar sesión"),
-    postLoading: post.loading,
-    postError: post.error,
+    fetchData: getUsers,
+    loading: false,
+    error: null,
   };
 };
 
