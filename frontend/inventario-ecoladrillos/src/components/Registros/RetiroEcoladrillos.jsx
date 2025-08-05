@@ -63,7 +63,7 @@ export default function RetiroEcoladrillos() {
   const onSubmitRetiro = async (e) => {
     e.preventDefault();
 
-    const newRetiro = {
+    const newWithdraw = {
       fecha: retiroEcoForm.fecha,
       ecoladrillo: retiroEcoForm.idEcoladrillo,
       cantidad: parseInt(retiroEcoForm.cantidad) || 0,
@@ -71,16 +71,19 @@ export default function RetiroEcoladrillos() {
     };
 
     let newErrors = {};
-    if (!newRetiro.ecoladrillo) {
+    if (!newWithdraw.ecoladrillo) {
       newErrors.idEcoladrillo = "Selecciona un ecoladrillo válido";
     }
-    if (newRetiro.cantidad <= 0) {
+    if (newWithdraw.cantidad <= 0) {
       newErrors.cantidad = "La cantidad debe ser mayor a 0";
     }
-    if (!newRetiro.fecha) {
+    if (
+      !newWithdraw.fecha ||
+      newWithdraw.fecha > new Date().toISOString().slice(0, 10)
+    ) {
       newErrors.fecha = "Selecciona una fecha válida";
     }
-    if (!newRetiro.motivo) {
+    if (!newWithdraw.motivo) {
       newErrors.motivo = "Selecciona un motivo válido";
     }
 
@@ -91,7 +94,7 @@ export default function RetiroEcoladrillos() {
     setError("");
 
     // Enviar petición
-    const response = await retiroEcobricksMutate.post(newRetiro);
+    const response = await retiroEcobricksMutate.post(newWithdraw);
     if (response.errorJsonMsg) {
       notify.error(response.errorJsonMsg);
       return;

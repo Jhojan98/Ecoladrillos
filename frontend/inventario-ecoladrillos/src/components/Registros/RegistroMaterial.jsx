@@ -77,7 +77,10 @@ export default function RegistroMaterial() {
     if (newRegister.cantidad <= 0) {
       newErrors.cantidad = "La cantidad debe ser mayor a 0";
     }
-    if (!newRegister.fecha) {
+    if (
+      !newRegister.fecha ||
+      newRegister.fecha > new Date().toISOString().slice(0, 10)
+    ) {
       newErrors.fecha = "Selecciona una fecha válida";
     }
     if (!newRegister.origen.trim()) {

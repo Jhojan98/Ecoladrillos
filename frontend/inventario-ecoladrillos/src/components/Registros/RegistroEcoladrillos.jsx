@@ -64,21 +64,24 @@ export default function RegistroEcoladrillos() {
 
   const onSubmitRegister = async (e) => {
     e.preventDefault();
-    
-    const newResgister = {
+
+    const newRegister = {
       fecha: registerEcoForm.fecha,
       ecoladrillo: registerEcoForm.idEcoladrillo,
       cantidad: parseInt(registerEcoForm.cantidad) || 0,
     };
 
     let newErrors = {};
-    if (!newResgister.ecoladrillo) {
+    if (!newRegister.ecoladrillo) {
       newErrors.idEcoladrillo = "seleccion un ecoladrillo valido";
     }
-    if (newResgister.cantidad <= 0) {
+    if (newRegister.cantidad <= 0) {
       newErrors.cantidad = "La cantidad debe ser mayor a 0";
     }
-    if (!newResgister.fecha) {
+    if (
+      !newRegister.fecha ||
+      newRegister.fecha > new Date().toISOString().slice(0, 10)
+    ) {
       newErrors.fecha = "Selecciona una fecha valida";
     }
 
@@ -89,7 +92,7 @@ export default function RegistroEcoladrillos() {
     setError("");
 
     // Enviar peticon
-    const response = await registerEcobricksMutate.post(newResgister);
+    const response = await registerEcobricksMutate.post(newRegister);
     if (response.errorJsonMsg) {
       notify.error(response.errorJsonMsg);
       return;
