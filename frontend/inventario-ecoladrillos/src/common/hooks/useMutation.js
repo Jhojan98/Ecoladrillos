@@ -52,7 +52,7 @@ export const useMutation = () => {
         throw new Error(
           result.error ||
             result.errors ||
-            result.message ||
+            result.errores ||
             `HTTP error ${response.status}`
         );
       }

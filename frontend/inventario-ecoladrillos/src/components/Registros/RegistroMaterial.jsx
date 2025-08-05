@@ -63,17 +63,24 @@ export default function RegistroMaterial() {
   const onSubmitRegister = async (e) => {
     e.preventDefault();
 
+    const newRegister = {
+      fecha: registerMaterialForm.fecha,
+      material: registerMaterialForm.idMaterial,
+      cantidad: parseInt(registerMaterialForm.cantidad) || 0,
+      origen: registerMaterialForm.origen,
+    };
+
     let newErrors = {};
-    if (!registerMaterialForm.idMaterial) {
+    if (!newRegister.material) {
       newErrors.idMaterial = "Selecciona un material válido";
     }
-    if (registerMaterialForm.cantidad <= 0) {
+    if (newRegister.cantidad <= 0) {
       newErrors.cantidad = "La cantidad debe ser mayor a 0";
     }
-    if (!registerMaterialForm.fecha) {
+    if (!newRegister.fecha) {
       newErrors.fecha = "Selecciona una fecha válida";
     }
-    if (!registerMaterialForm.origen.trim()) {
+    if (!newRegister.origen.trim()) {
       newErrors.origen = "El origen es requerido";
     }
 
@@ -84,23 +91,14 @@ export default function RegistroMaterial() {
     setError("");
 
     // Enviar petición
-    const newRegister = {
-      fecha: registerMaterialForm.fecha,
-      material: registerMaterialForm.idMaterial,
-      cantidad: registerMaterialForm.cantidad,
-      origen: registerMaterialForm.origen,
-    };
-
-    console.log("Nuevo registro:", newRegister);
-
     const response = await registerMaterialMutate.post(newRegister);
-    if (response.errorMutationMsg) {
-      notify.error(response.errorMutationMsg);
+    if (response.errorJsonMsg) {
+      notify.error(response.errorJsonMsg);
       return;
     }
     notify.success("Material registrado");
     fetchRegisters();
-    
+
     // Limpiar formulario
     setRegisterMaterialForm({
       idMaterial: 0,
@@ -128,10 +126,7 @@ export default function RegistroMaterial() {
           >
             <option value="">Selecciona un material</option>
             {materiales.map((material) => (
-              <option
-                key={material.id_insumo}
-                value={material.id_insumo}
-              >
+              <option key={material.id_insumo} value={material.id_insumo}>
                 {material.nombre}
               </option>
             ))}
@@ -148,7 +143,7 @@ export default function RegistroMaterial() {
             onChange={(e) =>
               setRegisterMaterialForm({
                 ...registerMaterialForm,
-                cantidad: parseInt(e.target.value) || 0,
+                cantidad: e.target.value,
               })
             }
             placeholder="Ingrese la cantidad"
@@ -163,9 +158,9 @@ export default function RegistroMaterial() {
             type="date"
             value={registerMaterialForm.fecha}
             onChange={(e) =>
-              setRegisterMaterialForm({ 
-                ...registerMaterialForm, 
-                fecha: e.target.value 
+              setRegisterMaterialForm({
+                ...registerMaterialForm,
+                fecha: e.target.value,
               })
             }
           />
@@ -177,16 +172,14 @@ export default function RegistroMaterial() {
             type="text"
             value={registerMaterialForm.origen}
             onChange={(e) =>
-              setRegisterMaterialForm({ 
-                ...registerMaterialForm, 
-                origen: e.target.value 
+              setRegisterMaterialForm({
+                ...registerMaterialForm,
+                origen: e.target.value,
               })
             }
             placeholder="Ingrese el origen del material"
           />
-          {error.origen && (
-            <span className="error-msg">{error.origen}</span>
-          )}
+          {error.origen && <span className="error-msg">{error.origen}</span>}
         </label>
         <button className="btn-submit" type="submit">
           Registrar

@@ -63,17 +63,24 @@ export default function RetiroEcoladrillos() {
   const onSubmitRetiro = async (e) => {
     e.preventDefault();
 
+    const newRetiro = {
+      fecha: retiroEcoForm.fecha,
+      ecoladrillo: retiroEcoForm.idEcoladrillo,
+      cantidad: parseInt(retiroEcoForm.cantidad) || 0,
+      motivo: retiroEcoForm.motivo,
+    };
+
     let newErrors = {};
-    if (!retiroEcoForm.idEcoladrillo) {
+    if (!newRetiro.ecoladrillo) {
       newErrors.idEcoladrillo = "Selecciona un ecoladrillo válido";
     }
-    if (retiroEcoForm.cantidad <= 0) {
+    if (newRetiro.cantidad <= 0) {
       newErrors.cantidad = "La cantidad debe ser mayor a 0";
     }
-    if (!retiroEcoForm.fecha) {
+    if (!newRetiro.fecha) {
       newErrors.fecha = "Selecciona una fecha válida";
     }
-    if (!retiroEcoForm.motivo) {
+    if (!newRetiro.motivo) {
       newErrors.motivo = "Selecciona un motivo válido";
     }
 
@@ -84,20 +91,13 @@ export default function RetiroEcoladrillos() {
     setError("");
 
     // Enviar petición
-    const newRetiro = {
-      fecha: retiroEcoForm.fecha,
-      ecoladrillo: retiroEcoForm.idEcoladrillo,
-      cantidad: retiroEcoForm.cantidad,
-      motivo: retiroEcoForm.motivo,
-    };
-
     const response = await retiroEcobricksMutate.post(newRetiro);
-    if (response.errorMutationMsg) {
-      notify.error(response.errorMutationMsg);
+    if (response.errorJsonMsg) {
+      notify.error(response.errorJsonMsg);
       return;
     }
     notify.success("Retiro registrado exitosamente");
-    
+
     // Limpiar formulario
     setRetiroEcoForm({
       idEcoladrillo: 0,
@@ -105,7 +105,7 @@ export default function RetiroEcoladrillos() {
       fecha: "",
       motivo: "Venta",
     });
-    
+
     fetchRetiros();
   };
 
@@ -147,7 +147,7 @@ export default function RetiroEcoladrillos() {
             onChange={(e) =>
               setRetiroEcoForm({
                 ...retiroEcoForm,
-                cantidad: parseInt(e.target.value),
+                cantidad: e.target.value,
               })
             }
           />
