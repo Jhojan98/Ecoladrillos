@@ -18,6 +18,7 @@ export function Header(props) {
   const { userName, userAvatar, isAuthenticated } = props;
 
   const location = useLocation(); // obtiene la ubicación actual
+  const { userData } = useAuth(); // obtener datos del usuario
 
   // ------ BARRAS DE NAVEGACION ------
   const { registerRef, handleBarsClicked } = useHeaderBars();
@@ -58,7 +59,7 @@ export function Header(props) {
   useClickOutside([headerUser, userOptionsRef], () => {
     setShowUserOptions(false);
   });
-  
+
   // ------ NAVEGACION ------
   // menu desplegable
   const [showDropdown, setShowDropdown] = useState(false);
@@ -85,41 +86,57 @@ export function Header(props) {
       </div>
 
       <nav className="header-nav flex align-center">
-        <Link className="link--home link flex align-center" to="/home">
-          <HomeIcon className="home-icon" alt="home icon" />
-          <span>Home</span>
-        </Link>
-        <Link className="link flex align-center" to="/dashboard">
-          {/* <HomeIcon className="home-icon" alt="home icon" /> */}
-          <span>Dashboard</span>
-        </Link>
-        <Link className="link" to="/inventory">
-          Inventario
-        </Link>
+        {isAuthenticated && (
+          <Link className="link--home link flex align-center" to="/home">
+            <HomeIcon className="home-icon" alt="home icon" />
+            <span>Home</span>
+          </Link>
+        )}
+        {userData.userRole === "admin" && (
+          <Link className="link flex align-center" to="/dashboard">
+            {/* <HomeIcon className="home-icon" alt="home icon" /> */}
+            <span>Dashboard</span>
+          </Link>
+        )}
+        {isAuthenticated && (
+          <Link className="link" to="/inventory">
+            Inventario
+          </Link>
+        )}
 
-        <Link className="link" to="/reports">
-          Reportes
-        </Link>
+        {userData.userRole === "admin" && (
+          <Link className="link" to="/reports">
+            Reportes
+          </Link>
+        )}
 
         {/* desplegable */}
-        <div className="dropdown relative">
-          <button className="link btn-clean" onClick={() => setShowDropdown(!showDropdown)}>
-            Registro
-          </button>
-          {showDropdown && (
-            <div className="dropdown-menu flex flex-column absolute" onClick={() => setShowDropdown(false)}>
-              <Link className="link dropdown-item" to="/register/ecobricks">
-                Ecoladrillos
-              </Link>
-              <Link className="link dropdown-item" to="/register/material">
-                Materiales
-              </Link>
-              <Link className="link dropdown-item" to="/register/withdraw">
-                Retiro Ecoladrillos
-              </Link>
-            </div>
-          )}
-        </div>
+        {userData.userRole === "operario" && (
+          <div className="dropdown relative">
+            <button
+              className="link btn-clean"
+              onClick={() => setShowDropdown(!showDropdown)}
+            >
+              Registro
+            </button>
+            {showDropdown && (
+              <div
+                className="dropdown-menu flex flex-column absolute"
+                onClick={() => setShowDropdown(false)}
+              >
+                <Link className="link dropdown-item" to="/register/ecobricks">
+                  Ecoladrillos
+                </Link>
+                <Link className="link dropdown-item" to="/register/material">
+                  Materiales
+                </Link>
+                <Link className="link dropdown-item" to="/register/withdraw">
+                  Retiro Ecoladrillos
+                </Link>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* usuario header */}
         {!isAuthenticated ? (
@@ -163,7 +180,7 @@ function UserOptions(props) {
   // función para cerrar sesión usando el sistema de cookies
   const handleLogout = async () => {
     await logout();
-    navigate("/home");
+    navigate("/login");
   };
 
   return (

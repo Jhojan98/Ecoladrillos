@@ -11,8 +11,9 @@ export const AuthProvider = ({ children }) => {
     id: null,
     userName: "Iniciar Sesion",
     userEmail: "",
+    userRole: "guest",
   }; // datos por defecto del usuario
-  
+
   const [userData, setUserData] = useState(defaultUser); // estado para guardar los datos del usuario
   const [isAuthenticated, setIsAuthenticated] = useState(false); // estado para saber si el token es valido
   const [authIsLoading, setAuthIsLoading] = useState(true); // Flag para mostrar el loading
@@ -28,40 +29,34 @@ export const AuthProvider = ({ children }) => {
   }, [isLoggingOut]);
 
   // Verificar el estado de autenticació
-  const checkAuthStatus = async () => {
-    try {
-      setAuthIsLoading(true);
-      const data = await getUser();
+  const checkAuthStatus = () => {
+    setAuthIsLoading(true);
+    const data = getUser();
 
-      if (data) {
-        setUserData({
-          id: data.id,
-          userName: data.nombre,
-          userEmail: data.email,
-        });
-        setIsAuthenticated(true);
-      }
-    } catch (error) {
-      setUserData(defaultUser);
-      setIsAuthenticated(false);
-    } finally {
-      setAuthIsLoading(false);
+    if (data.id) {
+      setUserData({
+        id: data.id,
+        userName: data.name,
+        userEmail: data.email,
+        userRole: data.role,
+      });
+      setIsAuthenticated(true);
+    } else {
+      logout(true);
     }
+    setAuthIsLoading(false);
   };
 
-  const logout = async () => {
-    try {
-      setIsLoggingOut(true);
-      await logoutUser();
-
-      setUserData(defaultUser);
-      setIsAuthenticated(false);
+  const logout = (silent = false) => {
+    setIsLoggingOut(true);
+    
+    logoutUser();
+    setUserData(defaultUser);
+    setIsAuthenticated(false);
+    if (!silent) {
       notify.success("Sesión cerrada.");
-    } catch (error) {
-      notify.error(error.message);
-    } finally {
-      setIsLoggingOut(false);
     }
+    setIsLoggingOut(false);
   };
 
   return (

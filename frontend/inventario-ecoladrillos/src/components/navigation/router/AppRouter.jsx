@@ -34,18 +34,26 @@ export function AppRouter() {
 
         <Route path="/" element={<BasePage />}>
           <Route index element={<Navigate to="/home" replace />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/inventory" element={<ConsultaInventario />} />
+          {isAuthenticated && <Route path="/home" element={<HomePage />} />}
+          {userData.userRole === "admin" && (
+            <Route path="/dashboard" element={<Dashboard />} />
+          )}
+          {isAuthenticated && (
+            <Route path="/inventory" element={<ConsultaInventario />} />
+          )}
 
-          <Route path="/register">
-            <Route index element={<Navigate to="ecobricks" replace />} />
-            <Route path="ecobricks" element={<RegistroEcoladrillos />} />
-            <Route path="material" element={<RegistroMaterial />} />
-            <Route path="withdraw" element={<RetiroEcoladrillos />} />
-          </Route>
+          {userData.userRole === "operario" && (
+            <Route path="/register">
+              <Route index element={<Navigate to="ecobricks" replace />} />
+              <Route path="ecobricks" element={<RegistroEcoladrillos />} />
+              <Route path="material" element={<RegistroMaterial />} />
+              <Route path="withdraw" element={<RetiroEcoladrillos />} />
+            </Route>
+          )}
 
-          <Route path="/reports" element={<Reports />} />
+          {userData.userRole === "admin" && (
+            <Route path="/reports" element={<Reports />} />
+          )}
         </Route>
         <Route
           path="*"

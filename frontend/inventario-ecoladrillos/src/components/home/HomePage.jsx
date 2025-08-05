@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Pie } from "react-chartjs-2";
+import { useAuth } from "@contexts/AuthContext";
 import { motion } from "framer-motion";
 import "./homePage.scss";
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const { userData } = useAuth();
+
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
@@ -76,6 +78,17 @@ const HomePage = () => {
 
           {/* Cards Section */}
           <section className="cards-section">
+            {userData.userRole === "admin" && (
+              <motion.div
+                className="card"
+                whileHover={{ y: -5, boxShadow: "0 8px 16px rgba(0,0,0,0.15)" }}
+                onClick={() => navigate("/dashboard")}
+              >
+                <span className="icon">📊</span>
+                <h3>Ver Estadisticas</h3>
+                <p>Consulta las estadisticas detalladas del inventario</p>
+              </motion.div>
+            )}
             <motion.div
               className="card"
               whileHover={{ y: -5, boxShadow: "0 8px 16px rgba(0,0,0,0.15)" }}
@@ -85,46 +98,44 @@ const HomePage = () => {
               <h3>Inventario</h3>
               <p>Consulta y gestiona tu inventario ecológico.</p>
             </motion.div>
-            <motion.div
-              className="card"
-              whileHover={{ y: -5, boxShadow: "0 8px 16px rgba(0,0,0,0.15)" }}
-              onClick={() => navigate("/reports")}
-            >
-              <span className="icon">📊</span>
-              <h3>Reportes</h3>
-              <p>Genera Reportes del Inventario</p>
-            </motion.div>
-            <motion.div
-              className="card escaner-card"
-              whileHover={{ y: -5, boxShadow: "0 8px 16px rgba(0,0,0,0.15)" }}
-              onMouseEnter={() => setFabOpen("escaner")}
-              onMouseLeave={() => setFabOpen(false)}
-            >
-              <span className="icon qr">
-                <span className="qr-anim">🔍</span>
-              </span>
-              <h3>Registrar</h3>
-              <p>Registrar Movimientos</p>
-              {fabOpen === "escaner" && (
-                <div className="escaner-menu">
-                  <button onClick={() => navigate("/register/ecobricks")}>
-                    Registrar Entrada
-                  </button>
-                  <button onClick={() => navigate("/register/withdraw")}>
-                    Registrar Salida
-                  </button>
-                </div>
-              )}
-            </motion.div>
-            <motion.div
-              className="card"
-              whileHover={{ y: -5, boxShadow: "0 8px 16px rgba(0,0,0,0.15)" }}
-              onClick={() => navigate("/register/material")}
-            >
-              <span className="icon">🌱</span>
-              <h3>Agregar Producto</h3>
-              <p>Agrega Productos al Inventario</p>
-            </motion.div>
+            {userData.userRole === "operario" && (
+              <motion.div
+                className="card escaner-card"
+                whileHover={{ y: -5, boxShadow: "0 8px 16px rgba(0,0,0,0.15)" }}
+                onMouseEnter={() => setFabOpen("escaner")}
+                onMouseLeave={() => setFabOpen(false)}
+              >
+                <span className="icon qr">
+                  <span className="qr-anim">🔍</span>
+                </span>
+                <h3>Registrar</h3>
+                <p>Registrar Nuevos productos o materiales</p>
+                {fabOpen === "escaner" && (
+                  <div className="escaner-menu">
+                    <button onClick={() => navigate("/register/ecobricks")}>
+                      Registrar Ecoladrillos
+                    </button>
+                    <button onClick={() => navigate("/register/material")}>
+                      Registrar Material
+                    </button>
+                    <button onClick={() => navigate("/register/withdraw")}>
+                      Retirar Ecoladrillos
+                    </button>
+                  </div>
+                )}
+              </motion.div>
+            )}
+            {userData.userRole === "admin" && (
+              <motion.div
+                className="card"
+                whileHover={{ y: -5, boxShadow: "0 8px 16px rgba(0,0,0,0.15)" }}
+                onClick={() => navigate("/reports")}
+              >
+                <span className="icon">📝</span>
+                <h3>Reportes</h3>
+                <p>Genera Reportes del Inventario</p>
+              </motion.div>
+            )}
           </section>
         </div>
       </section>

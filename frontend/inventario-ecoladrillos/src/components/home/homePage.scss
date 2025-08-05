@@ -79,22 +79,6 @@ $text: #222 !default;
       margin-bottom: 1.5rem;
       text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
-    // .cta-btn {
-    //   background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
-    //   color: #fff;
-    //   font-weight: 600;
-    //   border: none;
-    //   border-radius: 30px;
-    //   padding: 0.9rem 2.2rem;
-    //   font-size: 1.2rem;
-    //   box-shadow: 0 4px 12px rgba(67, 233, 123, 0.15);
-    //   cursor: pointer;
-    //   transition: box-shadow 0.3s, transform 0.3s;
-    //   &:hover {
-    //     box-shadow: 0 8px 24px rgba(67, 233, 123, 0.25);
-    //     transform: translateY(-2px);
-    //   }
-    // }
   }
 }
 
@@ -149,6 +133,7 @@ $text: #222 !default;
       position: relative;
       .escaner-menu {
         position: absolute;
+        text-wrap: nowrap;
         top: 100%;
         left: 50%;
         transform: translateX(-50%);
